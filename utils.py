@@ -46,6 +46,59 @@ HEADERS = {
 }
 
 
+ESTRUTURA_DIR = {
+    "netherlands":  ["Eredivisie"],
+    "polonia":      ["Campeonato"],
+    "suicia":       ["Campeonato"],
+
+    "scotland":     [
+                        "Premier_league", 
+                        "D1",
+                        "D2",
+                        "D3"
+                    ],
+
+    "argentina":    ["Campeonato"],
+
+    "germany":      ["Bundesliga_2", "Bundesliga_1"],
+
+    "turkey":       ["TFF_ligi_1"],
+    "japao":        ["Campeonato"],
+    "eua":          ["Campeonato"],
+    "russia":       ["Campeonato"],
+    "italy":        ["Serie_B", "Serie_A"],
+    "romenia":      ["Campeonato"],
+    "suecia":       ["Campeonato"],
+    "irlanda":      ["Campeonato"],
+    "brasil":       ["Campeonato"],
+    "portugal":     ["Primeira_liga"],
+    "france":       ["Ligue_2", "Ligue_1"],
+    "china":        ["Campeonato"],
+    "finlandia":    ["Campeonato"],
+
+    "england":      [
+                        "Championship",
+                        "premier_league",
+                        "League_1",
+                        "League_2"
+                    ],
+
+    "greece":       ["Ethniki_katigoria"],
+    "dinamarca":    ["Campeonato"],
+
+    "spain":        [
+                        "La_liga_primeira_d",
+                        "La_liga_segunda_d"
+                    ],
+
+    "mexico":       ["Campeonato"],
+    "belgium":      ["Jupiler"],
+    "austria":      ["Campeonato"],
+    "noruega":      ["Campeonato"],
+}
+
+
+
 class Season:
     def __init__(self, inicial: int, final: int):
         self._inicial: int = inicial

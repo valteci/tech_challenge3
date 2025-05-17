@@ -1,5 +1,7 @@
 import requests
 from time import sleep
+from pathlib import Path
+import os
 
 from utils import (
     Season,
@@ -32,23 +34,67 @@ from utils import (
     SUICIA_LEAGUES,
     EUA_LEAGUES,
     BASE_URL,
-    HEADERS
+    HEADERS,
+    ESTRUTURA_DIR
 )
 
 
 class Downloader:
     def __init__(self):
-        pass
+        self._criar_estrutura_diretorios()
 
     def atualizar(self):
         pass
 
     def baixar_todos(self):
-        pass
+        self._baixar_england()
+        self._baixar_germany()
+        self._baixar_spain()
+        self._baixar_italia()
+        self._baixar_franca()
+        self._baixar_scotland()
+        self._baixar_netherlands()
+        self._baixar_belgium()
+        self._baixar_portugal()
+        self._baixar_turkey()
+        self._baixar_greece()
+        self._baixar_argentina()
+        self._baixar_austria()
+        self._baixar_brasil()
+        self._baixar_china()
+        self._baixar_dinamarca()
+        self._baixar_finlandia()
+        self._baixar_irlanda()
+        self._baixar_japao()
+        self._baixar_mexico()
+        self._baixar_noruega()
+        self._baixar_polonia()
+        self._baixar_romenia()
+        self._baixar_russia()
+        self._baixar_suecia()
+        self._baixar_suicia()
+        self._baixar_eua()
 
     
-    def _criar_estrutura_diretorios(self):
-        pass
+    def _criar_estrutura_diretorios(
+            self,
+            base_dir: str = './data'
+    ) -> None:
+        
+        
+        
+        base_path = Path(base_dir)
+        
+
+        base_path.mkdir(parents=True, exist_ok=True)
+
+        for pais, competicoes in ESTRUTURA_DIR.items():
+            pais_path = base_path / pais
+            pais_path.mkdir(exist_ok=True)
+
+            for competicao in competicoes:
+                comp_path = pais_path / competicao
+                comp_path.mkdir(exist_ok=True)
 
 
 
