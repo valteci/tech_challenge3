@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from utils import Season
 
 class Preprocessing:
@@ -7,6 +8,15 @@ class Preprocessing:
 
     def __init__(self):
         self._datas: list[pd.DataFrame] = []
+
+        self._features = {
+            self.add_goals_scored: False,
+            self.add_goals_conceded: False,
+            self.add_total_matches: False,
+            self.add_total_points: False,
+            self.add_average_gols_scored: False,
+            self.add_average_gols_conceded: False
+        }
 
     def _load_data(self) -> None:
         season = Season(19, 20)
@@ -29,7 +39,7 @@ class Preprocessing:
         self._datas = value
 
 
-    def add_total_goals(self, year_index: int = 0) -> None:
+    def add_goals_scored(self, year_index: int = 0) -> None:
         """
         Para o DataFrame em self._datas[year_index], adiciona:
          - TotalHomeGoals: total de gols que o time mandante fez antes deste jogo
@@ -63,9 +73,10 @@ class Preprocessing:
         df['TotalAwayGoals']  = pivot['away'].fillna(0).astype(int).values
 
         self._datas[year_index] = df
+        self._features[self.add_goals_scored] = True
 
 
-    def add_gols_conceded(self, year_index: int = 0) -> None:
+    def add_goals_conceded(self, year_index: int = 0) -> None:
         """
         Para o DataFrame em self._datas[year_index], adiciona:
          - TotalHomeConceded: gols sofridos pelo mandante em jogos anteriores
@@ -100,6 +111,7 @@ class Preprocessing:
         df['TotalAwayConceded'] = pivot['away'].fillna(0).astype(int).values
 
         self._datas[year_index] = df
+        self._features[self.add_goals_conceded] = True
 
 
     def add_total_matches(self, year_index: int = 0) -> None:
@@ -144,7 +156,110 @@ class Preprocessing:
         df['TotalAwayMatches'] = pivot['away'].fillna(0).astype(int).values
 
         self._datas[year_index] = df
+        self._features[self.add_total_matches] = True
     
+
+    def add_total_points(self, year_index: int = 0) -> None:
+        """
+        Para o DataFrame em self._datas[year_index], adiciona:
+         - TotalHomePoints: pontos do mandante obtidos em jogos anteriores (3 vitória, 1 empate, 0 derrota)
+         - TotalAwayPoints: pontos do visitante obtidos em jogos anteriores
+        """
+        df = self._datas[year_index].copy()
+
+        # 1) Calcular os pontos de casa e de fora para cada partida
+        home_pts = df['FTR'].map({'H': 3, 'D': 1, 'A': 0})
+        away_pts = df['FTR'].map({'A': 3, 'D': 1, 'H': 0})
+
+        # 2) Criar visão “long” com cada time e seus pontos naquele jogo
+        df_home = (
+            df[['HomeTeam']]
+            .rename(columns={'HomeTeam':'Team'})
+            .assign(Points=home_pts,
+                    match_id=df.index,
+                    side='home',
+                    event_id=df.index * 2)
+        )
+        df_away = (
+            df[['AwayTeam']]
+            .rename(columns={'AwayTeam':'Team'})
+            .assign(Points=away_pts,
+                    match_id=df.index,
+                    side='away',
+                    event_id=df.index * 2 + 1)
+        )
+
+        df_long = pd.concat([df_home, df_away], ignore_index=True)
+        df_long = df_long.sort_values('event_id')
+
+        # 3) Acumular cumulativamente e remover os pontos do jogo atual
+        df_long['CumSum'] = df_long.groupby('Team')['Points'].cumsum()
+        df_long['PrevPoints'] = df_long['CumSum'] - df_long['Points']
+
+        # 4) Pivotar de volta para wide e atribuir ao DataFrame original
+        pivot = df_long.pivot(index='match_id', columns='side', values='PrevPoints')
+        df['TotalHomePoints'] = pivot['home'].fillna(0).astype(int).values
+        df['TotalAwayPoints'] = pivot['away'].fillna(0).astype(int).values
+
+        # 5) Atualiza o dataframe na lista interna
+        self._datas[year_index] = df
+        self._features[self.add_total_points] = True
+
+
+    def add_average_gols_scored(self, year_index: int = 0) -> None:
+        """
+        Para o DataFrame em self._datas[year_index], adiciona:
+         - AverageHomeGoalsScored: média de gols marcados pelo mandante em jogos anteriores
+         - AverageAwayGoalsScored: média de gols marcados pelo visitante em jogos anteriores
+        """
+        df = self._datas[year_index].copy()
+
+        # Evita divisão por zero: cria colunas temporárias para denominar
+        home_matches = df['TotalHomeMatches']
+        away_matches = df['TotalAwayMatches']
+
+        # cálculo das médias
+        df['AverageHomeGoalsScored'] = np.where(
+            home_matches > 0,
+            df['TotalHomeGoals'] / home_matches,
+            0.0
+        )
+        df['AverageAwayGoalsScored'] = np.where(
+            away_matches > 0,
+            df['TotalAwayGoals'] / away_matches,
+            0.0
+        )
+
+        # atualiza o DataFrame interno
+        self._datas[year_index] = df
+
+
+    def add_average_gols_conceded(self, year_index: int = 0) -> None:
+        """
+        Para o DataFrame em self._datas[year_index], adiciona:
+         - AverageHomeGoalsConceded: média de gols sofridos pelo mandante em jogos anteriores
+         - AverageAwayGoalsConceded: média de gols sofridos pelo visitante em jogos anteriores
+        """
+        df = self._datas[year_index].copy()
+
+        # evita divisão por zero pegando o total de jogos
+        home_matches = df['TotalHomeMatches']
+        away_matches = df['TotalAwayMatches']
+
+        # cálculo das médias de gols sofridos
+        df['AverageHomeGoalsConceded'] = np.where(
+            home_matches > 0,
+            df['TotalHomeConceded'] / home_matches,
+            0.0
+        )
+        df['AverageAwayGoalsConceded'] = np.where(
+            away_matches > 0,
+            df['TotalAwayConceded'] / away_matches,
+            0.0
+        )
+
+        # atualiza o DataFrame interno
+        self._datas[year_index] = df
 
 
 
@@ -158,10 +273,14 @@ print(model.datas[0].head())
 print('\n========\n')
 
 # Aplica o método ao primeiro ano
-model.datas[0].iloc[:, [2, 3]] = 1
+# model.datas[0].iloc[:, [2, 3]] = 1
+# model.datas[0].iloc[:, 4] = 'D'
 model.add_total_matches(0)
-model.add_total_goals(0)
-model.add_gols_conceded(0)
+model.add_goals_scored(0)
+model.add_goals_conceded(0)
+model.add_total_points(0)
+model.add_average_gols_scored(0)
+model.add_average_gols_conceded(0)
 
 
 # Depois: têm as colunas TotalHomeGoals e TotalAwayGoals
