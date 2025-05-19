@@ -17,7 +17,9 @@ class Preprocessing:
             self.add_average_gols_scored: False,
             self.add_average_gols_conceded: False,
             self.add_ppg: False,
-            self.add_last_n_average_gols_scored: False
+            self.add_last_n_average_gols_scored: False,
+            self.add_last_n_average_gols_conceded: False,
+            self.add_last_n_ppg: False
         }
 
     def _load_data(self) -> None:
@@ -339,6 +341,100 @@ class Preprocessing:
         self._datas[year_index] = df
 
 
+    def add_last_n_average_gols_conceded(self, n: int, year_index: int = 0) -> None:
+        """
+        Para o DataFrame em self._datas[year_index], adiciona:
+         - AverageHomeGoalsConcededLast{n}: média de gols sofridos pelo mandante nos últimos n jogos
+         - AverageAwayGoalsConcededLast{n}: média de gols sofridos pelo visitante nos últimos n jogos
+        (exclui o jogo atual; se houver menos de n jogos anteriores, faz a média sobre o disponível)
+        """
+        df = self._datas[year_index].copy()
+
+        # Monta visão “long” de gols sofridos
+        df_home = (
+            df[['HomeTeam', 'FTAG']]
+            .rename(columns={'HomeTeam': 'Team', 'FTAG': 'Goals'})
+            .assign(match_id=df.index, side='home', event_id=df.index * 2)
+        )
+        df_away = (
+            df[['AwayTeam', 'FTHG']]
+            .rename(columns={'AwayTeam': 'Team', 'FTHG': 'Goals'})
+            .assign(match_id=df.index, side='away', event_id=df.index * 2 + 1)
+        )
+        df_long = pd.concat([df_home, df_away], ignore_index=True)
+        df_long = df_long.sort_values('event_id').reset_index(drop=True)
+
+        # Calcula média móvel de gols sofridos nos últimos n jogos, excluindo o atual
+        df_long['RollingAvgConceded'] = (
+            df_long
+            .groupby('Team')['Goals']
+            .transform(lambda x: x.shift().rolling(window=n, min_periods=1).mean())
+        )
+
+        # Pivot de volta para o formato wide
+        pivot = df_long.pivot(index='match_id', columns='side', values='RollingAvgConceded')
+
+        # Atribui as colunas ao DataFrame original
+        df[f'AverageHomeGoalsConcededLast{n}'] = pivot['home'].reindex(df.index).fillna(0).values
+        df[f'AverageAwayGoalsConcededLast{n}'] = pivot['away'].reindex(df.index).fillna(0).values
+
+        # Atualiza o DataFrame na lista interna
+        self._datas[year_index] = df
+
+
+    def add_last_n_ppg(self, n: int, year_index: int = 0) -> None:
+        """
+        Para o DataFrame em self._datas[year_index], adiciona:
+         - AverageHomePointsLast{n}: média de pontos obtidos pelo mandante nos últimos n jogos
+         - AverageAwayPointsLast{n}: média de pontos obtidos pelo visitante nos últimos n jogos
+        (exclui o jogo atual; se houver menos de n jogos anteriores, faz a média sobre o disponível)
+        """
+        df = self._datas[year_index].copy()
+
+        # 1) Calcula pontos ganhos em cada partida (3/1/0)
+        home_pts = df['FTR'].map({'H': 3, 'D': 1, 'A': 0})
+        away_pts = df['FTR'].map({'A': 3, 'D': 1, 'H': 0})
+
+        # 2) Monta visão “long” com cada evento de pontuação
+        df_home = (
+            df[['HomeTeam']]
+            .rename(columns={'HomeTeam': 'Team'})
+            .assign(Points=home_pts,
+                    match_id=df.index,
+                    side='home',
+                    event_id=df.index * 2)
+        )
+        df_away = (
+            df[['AwayTeam']]
+            .rename(columns={'AwayTeam': 'Team'})
+            .assign(Points=away_pts,
+                    match_id=df.index,
+                    side='away',
+                    event_id=df.index * 2 + 1)
+        )
+        df_long = pd.concat([df_home, df_away], ignore_index=True)
+        df_long = df_long.sort_values('event_id').reset_index(drop=True)
+
+        # 3) Calcula média móvel de pontos nos últimos n jogos, excluindo o atual
+        df_long['RollingAvgPoints'] = (
+            df_long
+            .groupby('Team')['Points']
+            .transform(lambda x: x.shift().rolling(window=n, min_periods=1).mean())
+        )
+
+        # 4) Pivot de volta para wide
+        pivot = df_long.pivot(index='match_id', columns='side', values='RollingAvgPoints')
+
+        # 5) Atribui ao DataFrame original e preenche zeros onde não houver histórico
+        df[f'AverageHomePointsLast{n}'] = pivot['home'].reindex(df.index).fillna(0).values
+        df[f'AverageAwayPointsLast{n}'] = pivot['away'].reindex(df.index).fillna(0).values
+
+        # 6) Atualiza o DataFrame interno
+        self._datas[year_index] = df
+
+
+
+
     # ========================
 
 
@@ -361,7 +457,8 @@ model.add_average_gols_scored(0)
 model.add_average_gols_conceded(0)
 model.add_ppg(0)
 model.add_last_n_average_gols_scored(5, 0)
-
+model.add_last_n_average_gols_conceded(5, 0)
+model.add_last_n_ppg(5, 0)
 
 # Depois: têm as colunas TotalHomeGoals e TotalAwayGoals
 print(model.datas[0])
