@@ -1,10 +1,10 @@
 import pandas as pd
 from utils import Season
 
-base_dir = './data/england/premier_league'
-saving_dir = './cleaned_data'
-season = Season(19, 20)
-CABECALHO = 'HomeTeam,AwayTeam,FTHG,FTAG,FTR'
+base_dir = './data/england/premier_league' # diretório onde vai ser pego os dados
+saving_dir = './cleaned_data' # diretórios onde vão ser salvos os dados
+season = Season(19, 20) # limite inferior
+CABECALHO = 'HomeTeam,AwayTeam,FTHG,FTAG,FTR' # cabeçalho do csv.
 
 def _clean_data(csv: str) -> str:
     rows = csv.split('\n')[1:]
