@@ -15,7 +15,9 @@ class Preprocessing:
             self.add_total_matches: False,
             self.add_total_points: False,
             self.add_average_gols_scored: False,
-            self.add_average_gols_conceded: False
+            self.add_average_gols_conceded: False,
+            self.add_ppg: False,
+            self.add_last_n_average_gols_scored: False
         }
 
     def _load_data(self) -> None:
@@ -38,7 +40,7 @@ class Preprocessing:
         """Setter method"""
         self._datas = value
 
-
+    # Métricas base
     def add_goals_scored(self, year_index: int = 0) -> None:
         """
         Para o DataFrame em self._datas[year_index], adiciona:
@@ -204,8 +206,11 @@ class Preprocessing:
         # 5) Atualiza o dataframe na lista interna
         self._datas[year_index] = df
         self._features[self.add_total_points] = True
+    
+    # ========================
 
 
+    # Métricas derivadas
     def add_average_gols_scored(self, year_index: int = 0) -> None:
         """
         Para o DataFrame em self._datas[year_index], adiciona:
@@ -262,6 +267,79 @@ class Preprocessing:
         self._datas[year_index] = df
 
 
+    def add_ppg(self, year_index: int = 0) -> None:
+        """
+        Para o DataFrame em self._datas[year_index], adiciona:
+         - AverageHomePoints: média de pontos obtidos pelo mandante em jogos anteriores
+         - AverageAwayPoints: média de pontos obtidos pelo visitante em jogos anteriores
+        """
+        df = self._datas[year_index].copy()
+
+        # evita divisão por zero
+        home_matches = df['TotalHomeMatches']
+        away_matches = df['TotalAwayMatches']
+
+        # cálculo de pontos por jogo
+        df['AverageHomePoints'] = np.where(
+            home_matches > 0,
+            df['TotalHomePoints'] / home_matches,
+            0.0
+        )
+        df['AverageAwayPoints'] = np.where(
+            away_matches > 0,
+            df['TotalAwayPoints'] / away_matches,
+            0.0
+        )
+
+        # atualiza o DataFrame interno
+        self._datas[year_index] = df
+    
+    # ========================
+
+
+    # Métricas dos último N jogos
+    def add_last_n_average_gols_scored(self, n: int, year_index: int = 0) -> None:
+        """
+        Para o DataFrame em self._datas[year_index], adiciona:
+         - AverageHomeGoalsScoredLast{n}: média de gols marcados pelo mandante nos últimos n jogos
+         - AverageAwayGoalsScoredLast{n}: média de gols marcados pelo visitante nos últimos n jogos
+        (exclui o jogo atual; se houver menos de n jogos anteriores, faz a média sobre o disponível)
+        """
+        df = self._datas[year_index].copy()
+
+        # Monta visão “long”
+        df_home = (
+            df[['HomeTeam', 'FTHG']]
+            .rename(columns={'HomeTeam': 'Team', 'FTHG': 'Goals'})
+            .assign(match_id=df.index, side='home', event_id=df.index * 2)
+        )
+        df_away = (
+            df[['AwayTeam', 'FTAG']]
+            .rename(columns={'AwayTeam': 'Team', 'FTAG': 'Goals'})
+            .assign(match_id=df.index, side='away', event_id=df.index * 2 + 1)
+        )
+        df_long = pd.concat([df_home, df_away], ignore_index=True)
+        df_long = df_long.sort_values('event_id').reset_index(drop=True)
+
+        # Calcula a média móvel dos últimos n jogos, excluindo o atual
+        df_long['RollingAvg'] = (
+            df_long
+            .groupby('Team')['Goals']
+            .transform(lambda x: x.shift().rolling(window=n, min_periods=1).mean())
+        )
+
+        # Pivot de volta para wide
+        pivot = df_long.pivot(index='match_id', columns='side', values='RollingAvg')
+
+        # Atribui ao DataFrame original
+        df[f'AverageHomeGoalsScoredLast{n}'] = pivot['home'].reindex(df.index).fillna(0).values
+        df[f'AverageAwayGoalsScoredLast{n}'] = pivot['away'].reindex(df.index).fillna(0).values
+
+        # Atualiza o DataFrame interno
+        self._datas[year_index] = df
+
+
+    # ========================
 
 
 model = Preprocessing()
@@ -281,6 +359,8 @@ model.add_goals_conceded(0)
 model.add_total_points(0)
 model.add_average_gols_scored(0)
 model.add_average_gols_conceded(0)
+model.add_ppg(0)
+model.add_last_n_average_gols_scored(5, 0)
 
 
 # Depois: têm as colunas TotalHomeGoals e TotalAwayGoals
