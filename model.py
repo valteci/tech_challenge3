@@ -1,46 +1,118 @@
 from preprocessing import Preprocessing
 import pandas as pd
-from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_score
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, MinMaxScaler  # ou MinMaxScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import log_loss, accuracy_score
+from lightgbm import LGBMClassifier, early_stopping, log_evaluation
 
-
+# 1. Exporta os dados
 preprocessing = Preprocessing()
 preprocessing.export_data()
 data = preprocessing.export
-#data.to_csv('teste.csv', sep=',', index=False)
 
-# separar features e target
+# Regressão logística
+"""
+# 2. Separa features e target
 X = data.drop(columns=['FTR'])
-y = data['FTR']
+y = data['FTR'].astype(str)
 
-# separar treino e teste
+# 3. Split treino/teste
 x_train, x_test, y_train, y_test = train_test_split(
     X, y,
     test_size=0.2,
-    random_state=42
+    stratify=y,
+    random_state=32463
 )
 
-# criação do modelo
+# 4. Escalonamento (padronização)
+scaler = MinMaxScaler()            # para normalização [0–1], use MinMaxScaler()
+x_train_scaled = scaler.fit_transform(x_train)
+x_test_scaled  = scaler.transform(x_test)
+
+# 5. Criação do modelo
 model = LogisticRegression(
-    multi_class='multinomial',
-    solver='lbfgs',
+    solver='lbfgs',       # multinomial por padrão no sklearn >=1.7
     max_iter=1000,
-    random_state=42
+    random_state=32463
 )
 
-# treinamento do modelo
-model.fit(x_train, y_train)
+# 6. Treinamento
+model.fit(x_train_scaled, y_train)
 
-# Prevendo probabilidades e classes
-probs = model.predict_proba(x_test)
-preds = model.predict(x_test)
+# 7. Previsões
+probs = model.predict_proba(x_test_scaled)
+preds = model.predict(x_test_scaled)
 
-# Avaliar desempenho.
+# 8. Avaliação
 loss = log_loss(y_test, probs)
-acc = accuracy_score(y_test, preds)
+acc  = accuracy_score(y_test, preds)
 
 print(f"Log-loss: {loss:.4f}")
 print(f"Acurácia: {acc:.4f}")
+"""
+
+
+# lightgbm
+#"""
+# 2. Separa features e target
+X = data.drop(columns=['FTR'])
+y = data['FTR'].astype(str)
+
+# 3. Split treino/teste estratificado
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,
+    stratify=y,
+    random_state=42
+)
+
+# 4. Instancia o modelo LightGBM (boosted trees)
+model = LGBMClassifier(
+    objective='multiclass',
+    num_class=3,
+    boosting_type='gbdt',
+    learning_rate=0.05,
+    n_estimators=500,
+    num_leaves=31,
+    random_state=42
+)
+
+# 5. Treina com early stopping no conjunto de teste
+model.fit(
+    X_train, y_train,
+    eval_set=[(X_test, y_test)],
+    eval_metric='multi_logloss',
+    callbacks=[
+        early_stopping(stopping_rounds=20),    # interrompe se não melhorar por 20 iters
+        log_evaluation(period=50)],
+)
+
+# 6. Previsões e avaliação
+probs = model.predict_proba(X_test)
+preds = model.predict(X_test)
+
+print(f"Log-loss: {log_loss(y_test, probs):.4f}")
+print(f"Acurácia: {accuracy_score(y_test, preds):.4f}")
+
+novo_jogo = {
+    'HomeTeamEnc': 22,
+    'AwayTeamEnc': 15,
+    'AverageHomePoints': 2.6,
+    'AverageAwayPoints': 1.8
+}
+
+df_novo = pd.DataFrame([novo_jogo])
+probs = model.predict_proba(df_novo)[0]  # pega o array de probabilidades
+
+for classe, p in zip(model.classes_, probs):
+    print(f"Probabilidade de {classe}: {p*100:.1f}%")
+
+#"""
+
+
+
+
+
 
 

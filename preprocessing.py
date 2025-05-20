@@ -6,7 +6,7 @@ from sklearn.preprocessing import LabelEncoder
 class Preprocessing:
 
     DATA_PATH = './cleaned_data'
-    PRUNING = 80
+    PRUNING = 120 # 120
 
 
     def __init__(self):
@@ -27,11 +27,15 @@ class Preprocessing:
         }
 
     def _load_data(self) -> None:
-        season = Season(19, 20)
+        season = Season(14, 15) # 23, 24
 
         while season.next():
+            if season.date == '2021':
+                print('pulou 2021!')
+                continue
             file_name = f'{Preprocessing.DATA_PATH}/{season.date}.csv'
             df = pd.read_csv(file_name, sep=',')
+            df = df.dropna(subset=['FTR'])
             self._datas.append(df)
             print(len(self._datas))
 
@@ -510,9 +514,9 @@ class Preprocessing:
         self._add_average_gols_scored()
         self._add_average_gols_conceded()
         self._add_ppg()
-        self._add_last_n_average_gols_scored(5)
-        self._add_last_n_average_gols_conceded(5)
-        self._add_last_n_ppg(5)
+        self._add_last_n_average_gols_scored(6)
+        self._add_last_n_average_gols_conceded(6)
+        self._add_last_n_ppg(6)
         self._pruning(Preprocessing.PRUNING)
         self._merge()
         self._codificar_times()
@@ -520,20 +524,26 @@ class Preprocessing:
         selected_features = [
             'HomeTeamEnc',
             'AwayTeamEnc',
-            'TotalHomeMatches',
-            'TotalAwayMatches',
-            'AverageHomeGoalsScored',
-            'AverageAwayGoalsScored',
-            'AverageHomeGoalsConceded',
-            'AverageAwayGoalsConceded',
+            #'TotalHomeMatches',
+            #'TotalAwayMatches',
+            ##'TotalHomeGoals',
+            ##'TotalAwayGoals',
+            ##'TotalHomeConceded',
+            ##'TotalAwayConceded',
+            #'AverageHomeGoalsScored',
+            #'AverageAwayGoalsScored',
+            #'AverageHomeGoalsConceded',
+            #'AverageAwayGoalsConceded',
             'AverageHomePoints',
             'AverageAwayPoints',
-            'AverageHomeGoalsScoredLast5',
-            'AverageAwayGoalsScoredLast5',
-            'AverageHomeGoalsConcededLast5',
-            'AverageAwayGoalsConcededLast5',
-            'AverageHomePointsLast5',
-            'AverageAwayPointsLast5',
+            #'TotalHomePoints',
+            #'TotalAwayPoints',
+            #'AverageHomeGoalsScoredLast6',
+            #'AverageAwayGoalsScoredLast6',
+            #'AverageHomeGoalsConcededLast6',
+            #'AverageAwayGoalsConcededLast6',
+            #'AverageHomePointsLast6',
+            #'AverageAwayPointsLast6',
             'FTR'
         ]
 

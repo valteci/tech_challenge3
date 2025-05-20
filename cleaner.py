@@ -3,10 +3,14 @@ from utils import Season
 
 base_dir = './data/england/premier_league' # diretório onde vai ser pego os dados
 saving_dir = './cleaned_data' # diretórios onde vão ser salvos os dados
-season = Season(19, 20) # limite inferior
+season = Season(92, 93) # limite inferior
 CABECALHO = 'HomeTeam,AwayTeam,FTHG,FTAG,FTR' # cabeçalho do csv.
 
 def _clean_data(csv: str) -> str:
+    header = csv.split('\n')[0]
+    header_columns = header.split(',')
+    has_time_column = 'Time' in header_columns
+
     rows = csv.split('\n')[1:]
     result = []
 
@@ -16,11 +20,18 @@ def _clean_data(csv: str) -> str:
 
         columns = row.split(',')
         
-        home_team = columns[3]
-        away_team = columns[4]
-        home_goals = columns[5]
-        away_goals = columns[6]
-        resultado = columns[7]
+        if has_time_column:
+            home_team = columns[3]
+            away_team = columns[4]
+            home_goals = columns[5]
+            away_goals = columns[6]
+            resultado = columns[7]
+        else:
+            home_team = columns[2]
+            away_team = columns[3]
+            home_goals = columns[4]
+            away_goals = columns[5]
+            resultado = columns[6]
         
         new_row = [
             home_team,
