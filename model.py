@@ -27,6 +27,7 @@ x_train, x_test, y_train, y_test = train_test_split(
 
 # 4. Escalonamento (padronização)
 scaler = MinMaxScaler()            # para normalização [0–1], use MinMaxScaler()
+#scaler = StandardScaler()
 x_train_scaled = scaler.fit_transform(x_train)
 x_test_scaled  = scaler.transform(x_test)
 
@@ -50,6 +51,44 @@ acc  = accuracy_score(y_test, preds)
 
 print(f"Log-loss: {loss:.4f}")
 print(f"Acurácia: {acc:.4f}")
+
+
+novo_jogo = {
+    'HomeTeamEnc': 16,
+    'AwayTeamEnc': 50,
+    #'TotalHomeMatches': ,
+    #'TotalAwayMatches': ,
+    #'TotalHomeGoals': 46,
+    #'TotalAwayGoals': 51,
+    #'TotalHomeConceded': 48,
+    #'TotalAwayConceded': 64,
+    #'AverageHomeGoalsScored': ,
+    #'AverageAwayGoalsScored': ,
+    #'AverageHomeGoalsConceded': ,
+    #'AverageAwayGoalsConceded': ,
+    #'AverageHomePoints': ,
+    #'AverageAwayPoints': ,
+    'TotalHomePoints': 49,
+    'TotalAwayPoints': 41,
+    #'AverageHomeGoalsScoredLast6': ,
+    #'AverageAwayGoalsScoredLast6': ,
+    #'AverageHomeGoalsConcededLast6': ,
+    #'AverageAwayGoalsConcededLast6': ,
+    #'AverageHomePointsLast6': ,
+    #'AverageAwayPointsLast6': ,
+}
+
+df_novo = pd.DataFrame([novo_jogo])
+
+# 2) Aplica o mesmo MinMaxScaler usado no treinamento
+df_novo_scaled = scaler.transform(df_novo)
+
+# 3) Gera probabilidades e imprime
+probs_novo = model.predict_proba(df_novo_scaled)[0]
+for classe, p in zip(model.classes_, probs_novo):
+    print(f"Probabilidade de {classe}: {p*100:.1f}%")
+
+
 """
 
 
@@ -96,10 +135,28 @@ print(f"Log-loss: {log_loss(y_test, probs):.4f}")
 print(f"Acurácia: {accuracy_score(y_test, preds):.4f}")
 
 novo_jogo = {
-    'HomeTeamEnc': 22,
+    'HomeTeamEnc': 2,
     'AwayTeamEnc': 15,
-    'AverageHomePoints': 2.6,
-    'AverageAwayPoints': 1.8
+    #'TotalHomeMatches': ,
+    #'TotalAwayMatches': ,
+    'TotalHomeGoals': 56,
+    'TotalAwayGoals': 33,
+    'TotalHomeConceded': 46,
+    'TotalAwayConceded': 78,
+    #'AverageHomeGoalsScored': ,
+    #'AverageAwayGoalsScored': ,
+    #'AverageHomeGoalsConceded': ,
+    #'AverageAwayGoalsConceded': ,
+    #'AverageHomePoints': ,
+    #'AverageAwayPoints': ,
+    'TotalHomePoints': 53,
+    'TotalAwayPoints': 25,
+    #'AverageHomeGoalsScoredLast6': ,
+    #'AverageAwayGoalsScoredLast6': ,
+    #'AverageHomeGoalsConcededLast6': ,
+    #'AverageAwayGoalsConcededLast6': ,
+    #'AverageHomePointsLast6': ,
+    #'AverageAwayPointsLast6': ,
 }
 
 df_novo = pd.DataFrame([novo_jogo])

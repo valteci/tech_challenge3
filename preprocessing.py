@@ -481,6 +481,15 @@ class Preprocessing:
 
         encoder.fit(all_teams)
 
+        # faz mapeamento
+        mapping = {
+            team: int(code)
+            for team, code in zip(encoder.classes_, encoder.transform(encoder.classes_))
+        }
+        print("Team encoding mapping:")
+        for team, code in mapping.items():
+            print(f"  {team}: {code}")
+
         # 2) Transforma cada coluna usando o mesmo encoder
         self._export['HomeTeamEnc'] = encoder.transform(
             self._export['HomeTeam']
@@ -519,25 +528,27 @@ class Preprocessing:
         self._add_last_n_ppg(6)
         self._pruning(Preprocessing.PRUNING)
         self._merge()
+        self._export.to_csv('real.csv', sep=',', index=False)
         self._codificar_times()
+        self._export.to_csv('codificados.csv', sep=',', index=False)
 
         selected_features = [
             'HomeTeamEnc',
             'AwayTeamEnc',
             #'TotalHomeMatches',
             #'TotalAwayMatches',
-            ##'TotalHomeGoals',
-            ##'TotalAwayGoals',
-            ##'TotalHomeConceded',
-            ##'TotalAwayConceded',
+            'TotalHomeGoals',
+            'TotalAwayGoals',
+            'TotalHomeConceded',
+            'TotalAwayConceded',
             #'AverageHomeGoalsScored',
             #'AverageAwayGoalsScored',
             #'AverageHomeGoalsConceded',
             #'AverageAwayGoalsConceded',
-            'AverageHomePoints',
-            'AverageAwayPoints',
-            #'TotalHomePoints',
-            #'TotalAwayPoints',
+            #'AverageHomePoints',
+            #'AverageAwayPoints',
+            'TotalHomePoints',
+            'TotalAwayPoints',
             #'AverageHomeGoalsScoredLast6',
             #'AverageAwayGoalsScoredLast6',
             #'AverageHomeGoalsConcededLast6',
