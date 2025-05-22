@@ -5,6 +5,8 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler  # ou MinMaxScale
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import log_loss, accuracy_score
 from lightgbm import LGBMClassifier, early_stopping, log_evaluation
+from sklearn.metrics import classification_report, accuracy_score
+
 
 # 1. Exporta os dados
 preprocessing = Preprocessing()
@@ -134,29 +136,50 @@ preds = model.predict(X_test)
 print(f"Log-loss: {log_loss(y_test, probs):.4f}")
 print(f"Acurácia: {accuracy_score(y_test, preds):.4f}")
 
+
+# 7. Matriz de confusão
+report = classification_report(
+    y_test, 
+    preds,
+    labels=model.classes_,        # garante a ordem ['H','D','A']
+    target_names=model.classes_,  # nomes legíveis das classes
+    digits=4                       # casas decimais
+)
+print("Classification Report:")
+print(report)
+
+# 2) Acurácia global (opcional, já aparece no report)
+acc = accuracy_score(y_test, preds)
+print(f"Acurácia global: {acc:.4f}")
+
+
 novo_jogo = {
-    'HomeTeamEnc': 2,
-    'AwayTeamEnc': 15,
+    'HomeTeamEnc': 16,
+    'AwayTeamEnc': 24,
     #'TotalHomeMatches': ,
     #'TotalAwayMatches': ,
-    'TotalHomeGoals': 56,
-    'TotalAwayGoals': 33,
-    'TotalHomeConceded': 46,
-    'TotalAwayConceded': 78,
+    'TotalHomeGoals': 54,
+    'TotalAwayGoals': 70,
+    'TotalHomeConceded': 52,
+    'TotalAwayConceded': 44,
     #'AverageHomeGoalsScored': ,
     #'AverageAwayGoalsScored': ,
     #'AverageHomeGoalsConceded': ,
     #'AverageAwayGoalsConceded': ,
     #'AverageHomePoints': ,
     #'AverageAwayPoints': ,
-    'TotalHomePoints': 53,
-    'TotalAwayPoints': 25,
+    'TotalHomePoints': 54,
+    'TotalAwayPoints': 68,
     #'AverageHomeGoalsScoredLast6': ,
     #'AverageAwayGoalsScoredLast6': ,
     #'AverageHomeGoalsConcededLast6': ,
     #'AverageAwayGoalsConcededLast6': ,
     #'AverageHomePointsLast6': ,
     #'AverageAwayPointsLast6': ,
+    #'IsItEliteHome': 0,
+    #'IsItEliteAway': 1,
+    'HistoricalAvgHomePoints': 43.47,
+    'HistoricalAvgAwayPoints': 68.8
 }
 
 df_novo = pd.DataFrame([novo_jogo])
@@ -164,6 +187,7 @@ probs = model.predict_proba(df_novo)[0]  # pega o array de probabilidades
 
 for classe, p in zip(model.classes_, probs):
     print(f"Probabilidade de {classe}: {p*100:.1f}%")
+   
 
 #"""
 

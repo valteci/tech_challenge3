@@ -27,12 +27,12 @@ class Preprocessing:
         }
 
     def _load_data(self) -> None:
-        season = Season(14, 15) # 23, 24
+        season = Season(2, 3) # 23, 24
 
         while season.next():
-            if season.date == '2021':
-                print('pulou 2021!')
-                continue
+            #if season.date == '2021':
+            #    print('pulou 2021!')
+            #    continue
             file_name = f'{Preprocessing.DATA_PATH}/{season.date}.csv'
             df = pd.read_csv(file_name, sep=',')
             df = df.dropna(subset=['FTR'])
@@ -40,10 +40,77 @@ class Preprocessing:
             print(len(self._datas))
 
 
+    def __load_data_temp(self) -> list[pd.DataFrame]:
+        season = Season(93, 94) # 23, 24
+        dataframes: list[pd.DataFrame] = []
+
+        while season.next():
+            file_name = f'{Preprocessing.DATA_PATH}/{season.date}.csv'
+            df = pd.read_csv(file_name, sep=',')
+            df = df.dropna(subset=['FTR'])
+            dataframes.append(df)
+            print(len(self._datas))
+
+        return dataframes
+
+
+    def _add_average_historical_points(self) -> None:
+        """
+        Para cada DataFrame em self._datas, adiciona duas colunas:
+         - HistoricalAvgHomePoints: média de pontos de temporada histórica do mandante
+         - HistoricalAvgAwayPoints: média de pontos de temporada histórica do visitante
+        A média é calculada por time, usando todas as temporadas carregadas por __load_data_temp()
+        que ocorreram antes da temporada da própria DataFrame.
+        """
+        # 1) Carrega todas as temporadas históricas em ordem cronológica
+        hist_raw = self.__load_data_temp()  # lista de DataFrames de 1992-93 até última temporada
+        M = len(hist_raw)
+        N = len(self._datas)
+
+        # 2) Para cada temporada histórica, computa total de pontos por time
+        records = []
+        for season_idx, df_hist in enumerate(hist_raw):
+            # calcula pontos por jogo
+            home_pts = df_hist['FTR'].map({'H': 3, 'D': 1, 'A': 0})
+            away_pts = df_hist['FTR'].map({'A': 3, 'D': 1, 'H': 0})
+
+            # concatena e soma por time
+            df_h = pd.DataFrame({'Team': df_hist['HomeTeam'], 'Points': home_pts})
+            df_a = pd.DataFrame({'Team': df_hist['AwayTeam'], 'Points': away_pts})
+            df_comb = pd.concat([df_h, df_a], ignore_index=True)
+            total_by_team = df_comb.groupby('Team')['Points'].sum().reset_index()
+            total_by_team['SeasonIdx'] = season_idx
+
+            records.append(total_by_team)
+
+        hist_points_df = pd.concat(records, ignore_index=True)
+        # hist_points_df tem colunas ['Team', 'Points', 'SeasonIdx']
+
+        # 3) Para cada DataFrame alvo em self._datas, calcula média histórica
+        #    expurgando temporadas futuras (incluindo a própria)
+        start_idx = M - N  # index na lista histórica correspondente ao primeiro df de self._datas
+        for i, df in enumerate(self._datas):
+            season_idx = start_idx + i
+
+            # filtra apenas temporadas anteriores
+            past = hist_points_df[hist_points_df['SeasonIdx'] < season_idx]
+            # calcula média de pontos por time
+            avg_past = past.groupby('Team')['Points'].mean()
+
+            # mapeia para as colunas home e away, preenchendo 0 se time não existir no histórico
+            df['HistoricalAvgHomePoints'] = df['HomeTeam'].map(avg_past).fillna(0.0)
+            df['HistoricalAvgAwayPoints'] = df['AwayTeam'].map(avg_past).fillna(0.0)
+
+            # atualiza na lista interna
+            self._datas[i] = df
+
+        
+
     @property
     def export(self):
         """Getter method"""
         return self._export
+
 
     @property
     def datas(self):
@@ -463,6 +530,8 @@ class Preprocessing:
             self._datas[year_index] = df
 
 
+
+
     def _codificar_times(self) -> None:
         """
         Para o DataFrame em self._datas[year_index], aplica label encoding
@@ -512,6 +581,33 @@ class Preprocessing:
     def _merge(self) -> None:
         self._export = pd.concat(self._datas, ignore_index=True)
 
+    def _merge_temp(self, list_df: list[pd.DataFrame]) -> None:
+        return pd.concat(list_df, ignore_index=True)
+
+
+    def _add_is_it_elite(self) -> None:
+        """
+        Adiciona colunas booleanas indicando se o time da casa ou visitante
+        é um "time estrela" (elite) historicamente forte.
+         - IsItEliteHome: 1 se HomeTeam estiver em elite_teams, 0 caso contrário
+         - IsItEliteAway: 1 se AwayTeam estiver em elite_teams, 0 caso contrário
+        """
+        elite_teams = {
+            "Man City",
+            "Man United",
+            "Arsenal",
+            "Liverpool",
+            "Chelsea",
+            "Tottenham",
+        }
+
+        for i, df in enumerate(self._datas):
+            # marca 1/0 se o time faz parte da lista de elites
+            df['IsItEliteHome'] = df['HomeTeam'].isin(elite_teams).astype(int)
+            df['IsItEliteAway'] = df['AwayTeam'].isin(elite_teams).astype(int)
+            # atualiza o DataFrame na lista
+            self._datas[i] = df
+
 
     def export_data(self) -> None:
         self._load_data()
@@ -526,6 +622,8 @@ class Preprocessing:
         self._add_last_n_average_gols_scored(6)
         self._add_last_n_average_gols_conceded(6)
         self._add_last_n_ppg(6)
+        self._add_average_historical_points()
+        self._add_is_it_elite()
         self._pruning(Preprocessing.PRUNING)
         self._merge()
         self._export.to_csv('real.csv', sep=',', index=False)
@@ -555,6 +653,10 @@ class Preprocessing:
             #'AverageAwayGoalsConcededLast6',
             #'AverageHomePointsLast6',
             #'AverageAwayPointsLast6',
+            'IsItEliteHome',
+            'IsItEliteAway',
+            'HistoricalAvgHomePoints',
+            'HistoricalAvgAwayPoints',
             'FTR'
         ]
 
@@ -563,7 +665,6 @@ class Preprocessing:
         
 
        
-
 
 #model = Preprocessing()
 #model.export_data()

@@ -756,3 +756,5 @@ class Downloader:
             print(f'Erro ao tentar baixar liga: {EUA_LEAGUES}, erro: ', e)
 
 
+a = Downloader()
+a._baixar_england()
