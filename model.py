@@ -227,12 +227,106 @@ class Search:
         return new_total_goals / new_matches
 
 
-    def average_goals_conceded(team: str | int) -> float:
-        pass
+    def average_goals_conceded(self, team: str | int) -> float:
+        """
+        Retorna a média de gols sofridos pelo time no campeonato, já incluindo os gols do jogo atual:
+        - pega AverageHomeGoalsConceded ou AverageAwayGoalsConceded da última linha;
+        - calcula o total de gols sofridos anteriores: base_avg * base_matches;
+        - soma os gols sofridos no jogo atual (FTAG se em casa, FTHG se fora);
+        - divide pelo número de partidas anterior + 1.
+        """
+        # 1) Converte nome → código, se necessário
+        if isinstance(team, str):
+            if team not in self._encoding_table:
+                raise KeyError(f"Time '{team}' não está na tabela de encoding.")
+            code = self._encoding_table[team]
+        else:
+            code = team
+
+        # 2) Máscaras para jogos em casa ou fora
+        mask_home = self._data['HomeTeamEnc'] == code
+        mask_away = self._data['AwayTeamEnc'] == code
+        mask = mask_home | mask_away
+
+        # 3) Verifica existência do time no DataFrame
+        if not mask.any():
+            raise ValueError(f"Time (código {code}) não encontrado no DataFrame.")
+
+        # 4) Seleciona a última partida
+        last_match = self._data[mask].iloc[-1]
+
+        # 5) Extrai média de gols sofridos e número de partidas anteriores
+        if last_match['HomeTeamEnc'] == code:
+            base_avg = float(last_match['AverageHomeGoalsConceded'])
+            base_matches = int(last_match['TotalHomeMatches'])
+            extra_conceded = int(last_match['FTAG'])
+        else:
+            base_avg = float(last_match['AverageAwayGoalsConceded'])
+            base_matches = int(last_match['TotalAwayMatches'])
+            extra_conceded = int(last_match['FTHG'])
+
+        # 6) Recalcula média incluindo o jogo atual
+        total_conceded_prev = base_avg * base_matches
+        new_total_conceded = total_conceded_prev + extra_conceded
+        new_matches = base_matches + 1
+
+        return new_total_conceded / new_matches
 
 
-    def average_points(team: str | int) -> float:
-        pass
+    def average_points(self, team: str | int) -> float:
+        """
+        Retorna a média de pontos por partida do time no campeonato, já incluindo os pontos do jogo atual:
+        - pega TotalHomePoints ou TotalAwayPoints da última linha;
+        - pega TotalHomeMatches ou TotalAwayMatches da última linha;
+        - calcula os pontos extra do jogo atual (3 por vitória, 1 por empate);
+        - soma e divide pelo número de partidas + 1.
+        """
+        # 1) Converte nome → código, se necessário
+        if isinstance(team, str):
+            if team not in self._encoding_table:
+                raise KeyError(f"Time '{team}' não está na tabela de encoding.")
+            code = self._encoding_table[team]
+        else:
+            code = team
+
+        # 2) Máscaras para jogos em casa ou fora
+        mask_home = self._data['HomeTeamEnc'] == code
+        mask_away = self._data['AwayTeamEnc'] == code
+        mask = mask_home | mask_away
+
+        # 3) Verifica existência do time no DataFrame
+        if not mask.any():
+            raise ValueError(f"Time (código {code}) não encontrado no DataFrame.")
+
+        # 4) Seleciona a última partida
+        last_match = self._data[mask].iloc[-1]
+
+        # 5) Extrai pontos e partidas acumulados até antes do jogo
+        if last_match['HomeTeamEnc'] == code:
+            base_points = int(last_match['TotalHomePoints'])
+            base_matches = int(last_match['TotalHomeMatches'])
+            is_home = True
+        else:
+            base_points = int(last_match['TotalAwayPoints'])
+            base_matches = int(last_match['TotalAwayMatches'])
+            is_home = False
+
+        # 6) Calcula pontos do jogo atual via FTR
+        ftr = last_match['FTR']
+        if ftr == 'D':
+            extra = 1
+        elif is_home and ftr == 'H':
+            extra = 3
+        elif (not is_home) and ftr == 'A':
+            extra = 3
+        else:
+            extra = 0
+
+        # 7) Recalcula média incluindo o jogo atual
+        total_points = base_points + extra
+        total_matches = base_matches + 1
+
+        return total_points / total_matches
 
 
     def average_goals_scored_last_n(team: str | int, n: int) -> float:
@@ -250,8 +344,23 @@ class Search:
 
 
     
-    def is_it_elite(team: str | int) -> bool:
+    def is_it_elite(self, team: str) -> bool:
+        # 1) Converte nome → código, se necessário
+        elite_teams = [
+            'Man City',
+            'Liverpool',
+            'Arsenal',
+            'Tottenham',
+            'Man United',
+            'Chelsea'
+        ]
+
+        if team in elite_teams:
+            return True
+        
         return False
+
+        
 
 
 
@@ -269,7 +378,7 @@ times = ['Liverpool', 'Arsenal', 'Man City', 'Newcastle', 'Chelsea', 'Aston Vill
          'Leicester', 'Ipswich', 'Southampton']
 
 for time in times:
-    print(time + ' - ' + str(search.average_goals_scored(time)))
+    print(time + ' - ' + str(search.is_it_elite(time)))
 
 
 exit()
