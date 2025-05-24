@@ -329,18 +329,148 @@ class Search:
         return total_points / total_matches
 
 
-    def average_goals_scored_last_n(team: str | int, n: int) -> float:
-        pass
+    def average_goals_scored_last_n(self, team: str | int, n: int) -> float:
+        """
+        Retorna a média de gols marcados pelo time nos últimos n jogos (incluindo o mais recente):
+        - Seleciona as últimas n partidas do time (casa ou fora).
+        - Para cada partida, soma FTHG se jogou em casa, ou FTAG se jogou fora.
+        - Divide o total de gols por n e retorna o resultado.
+        """
+        # 1) Valida n
+        if n <= 0:
+            raise ValueError(f"O parâmetro n deve ser maior que zero, recebeu {n}.")
+
+        # 2) Converte nome → código, se necessário
+        if isinstance(team, str):
+            if team not in self._encoding_table:
+                raise KeyError(f"Time '{team}' não está na tabela de encoding.")
+            code = self._encoding_table[team]
+        else:
+            code = team
+
+        # 3) Máscara para jogos em casa ou fora
+        mask_home = self._data['HomeTeamEnc'] == code
+        mask_away = self._data['AwayTeamEnc'] == code
+        df_team = self._data[mask_home | mask_away]
+
+        # 4) Verifica se há jogos suficientes
+        total_matches = len(df_team)
+        if total_matches < n:
+            raise ValueError(f"Time (código {code}) tem apenas {total_matches} jogos, menos que {n}.")
+
+        # 5) Seleciona as últimas n partidas
+        recent = df_team.iloc[-n:]
+
+        # 6) Soma gols marcados em cada partida
+        total_goals = 0
+        for _, match in recent.iterrows():
+            if match['HomeTeamEnc'] == code:
+                total_goals += int(match['FTHG'])
+            else:
+                total_goals += int(match['FTAG'])
+
+        # 7) Calcula e retorna a média
+        return total_goals / n
+
+
+    def average_goals_conceded_last_n(self, team: str | int, n: int) -> float:
+        """
+        Retorna a média de gols sofridos pelo time nas últimas n partidas:
+        - Seleciona as últimas n partidas do time (casa ou fora).
+        - Para cada partida, soma FTAG se jogou em casa, ou FTHG se jogou fora.
+        - Divide o total de gols sofridos por n e retorna o resultado.
+        """
+        # 1) Valida n
+        if n <= 0:
+            raise ValueError(f"O parâmetro n deve ser maior que zero, recebeu {n}.")
+
+        # 2) Converte nome → código, se necessário
+        if isinstance(team, str):
+            if team not in self._encoding_table:
+                raise KeyError(f"Time '{team}' não está na tabela de encoding.")
+            code = self._encoding_table[team]
+        else:
+            code = team
+
+        # 3) Máscaras para jogos em casa ou fora
+        mask_home = self._data['HomeTeamEnc'] == code
+        mask_away = self._data['AwayTeamEnc'] == code
+        df_team = self._data[mask_home | mask_away]
+
+        # 4) Verifica se há jogos suficientes
+        total_matches = len(df_team)
+        if total_matches < n:
+            raise ValueError(f"Time (código {code}) tem apenas {total_matches} jogos, menos que {n}.")
+
+        # 5) Seleciona as últimas n partidas
+        recent = df_team.iloc[-n:]
+
+        # 6) Soma gols sofridos em cada partida
+        total_conceded = 0
+        for _, match in recent.iterrows():
+            if match['HomeTeamEnc'] == code:
+                total_conceded += int(match['FTAG'])
+            else:
+                total_conceded += int(match['FTHG'])
+
+        # 7) Calcula e retorna a média
+        return total_conceded / n
 
 
     
-    def average_goals_conceded_last_n(team: str | int, n: int) -> float:
-        pass
+    def average_points_last_n(self, team: str | int, n: int) -> float:
+        """
+        Retorna a média de pontos por partida do time nas últimas n partidas:
+        - Seleciona as últimas n partidas do time (casa ou fora).
+        - Para cada partida:
+            * se jogou em casa e FTR == 'H' → +3; se 'D' → +1; senão +0;
+            * se jogou fora e FTR == 'A' → +3; se 'D' → +1; senão +0.
+        - Divide o total de pontos por n e retorna o resultado.
+        """
+        # 1) Valida n
+        if n <= 0:
+            raise ValueError(f"O parâmetro n deve ser maior que zero, recebeu {n}.")
 
+        # 2) Converte nome → código, se necessário
+        if isinstance(team, str):
+            if team not in self._encoding_table:
+                raise KeyError(f"Time '{team}' não está na tabela de encoding.")
+            code = self._encoding_table[team]
+        else:
+            code = team
 
-    
-    def average_points_last_n(team: str | int, n: int) -> float:
-        pass
+        # 3) Filtra partidas do time
+        mask_home = self._data['HomeTeamEnc'] == code
+        mask_away = self._data['AwayTeamEnc'] == code
+        df_team = self._data[mask_home | mask_away]
+
+        # 4) Verifica se há jogos suficientes
+        total_matches = len(df_team)
+        if total_matches < n:
+            raise ValueError(f"Time (código {code}) tem apenas {total_matches} jogos, menos que {n}.")
+
+        # 5) Seleciona as últimas n partidas
+        recent = df_team.iloc[-n:]
+
+        # 6) Soma pontos em cada partida
+        total_points = 0
+        for _, match in recent.iterrows():
+            ftr = match['FTR']
+            if match['HomeTeamEnc'] == code:
+                # jogo em casa
+                if ftr == 'H':
+                    total_points += 3
+                elif ftr == 'D':
+                    total_points += 1
+            else:
+                # jogo fora
+                if ftr == 'A':
+                    total_points += 3
+                elif ftr == 'D':
+                    total_points += 1
+
+        # 7) Retorna média de pontos
+        return total_points / n
 
 
     
@@ -378,7 +508,7 @@ times = ['Liverpool', 'Arsenal', 'Man City', 'Newcastle', 'Chelsea', 'Aston Vill
          'Leicester', 'Ipswich', 'Southampton']
 
 for time in times:
-    print(time + ' - ' + str(search.is_it_elite(time)))
+    print(time + ' - ' + str(search.average_points_last_n(time, 6)))
 
 
 exit()
