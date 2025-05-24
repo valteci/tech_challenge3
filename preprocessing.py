@@ -12,6 +12,7 @@ class Preprocessing:
     def __init__(self):
         self._datas: list[pd.DataFrame] = []
         self._export: pd.DataFrame = None
+        self._encoding_table: dict = {}
 
         self._features = {
             self._add_goals_scored: False,
@@ -26,18 +27,15 @@ class Preprocessing:
             self._add_last_n_ppg: False
         }
 
+
     def _load_data(self) -> None:
         season = Season(2, 3) # 23, 24
 
         while season.next():
-            #if season.date == '2021':
-            #    print('pulou 2021!')
-            #    continue
             file_name = f'{Preprocessing.DATA_PATH}/{season.date}.csv'
             df = pd.read_csv(file_name, sep=',')
             df = df.dropna(subset=['FTR'])
             self._datas.append(df)
-            print(len(self._datas))
 
 
     def __load_data_temp(self) -> list[pd.DataFrame]:
@@ -49,7 +47,6 @@ class Preprocessing:
             df = pd.read_csv(file_name, sep=',')
             df = df.dropna(subset=['FTR'])
             dataframes.append(df)
-            print(len(self._datas))
 
         return dataframes
 
@@ -117,6 +114,12 @@ class Preprocessing:
         """Getter method"""
         return self._datas
     
+
+    @property
+    def encoding_table(self) -> dict:
+        """Getter method"""
+        return self._encoding_table
+
 
     @datas.setter
     def datas(self, value: list[pd.DataFrame]) -> None:
@@ -555,9 +558,13 @@ class Preprocessing:
             team: int(code)
             for team, code in zip(encoder.classes_, encoder.transform(encoder.classes_))
         }
-        print("Team encoding mapping:")
+
+        # tabela de mapeamento:
         for team, code in mapping.items():
-            print(f"  {team}: {code}")
+            self._encoding_table[team] = code
+
+        
+
 
         # 2) Transforma cada coluna usando o mesmo encoder
         self._export['HomeTeamEnc'] = encoder.transform(
@@ -567,8 +574,6 @@ class Preprocessing:
         self._export['AwayTeamEnc'] = encoder.transform(
             self._export['AwayTeam']
         )
-
-        print(self._export)
 
     # ========================
 
@@ -633,14 +638,16 @@ class Preprocessing:
         selected_features = [
             'HomeTeamEnc',
             'AwayTeamEnc',
-            #'TotalHomeMatches',
-            #'TotalAwayMatches',
+            'FTHG',
+            'FTAG',
+            'TotalHomeMatches',
+            'TotalAwayMatches',
             'TotalHomeGoals',
             'TotalAwayGoals',
             'TotalHomeConceded',
             'TotalAwayConceded',
-            #'AverageHomeGoalsScored',
-            #'AverageAwayGoalsScored',
+            'AverageHomeGoalsScored',
+            'AverageAwayGoalsScored',
             #'AverageHomeGoalsConceded',
             #'AverageAwayGoalsConceded',
             #'AverageHomePoints',
@@ -653,8 +660,8 @@ class Preprocessing:
             #'AverageAwayGoalsConcededLast6',
             #'AverageHomePointsLast6',
             #'AverageAwayPointsLast6',
-            'IsItEliteHome',
-            'IsItEliteAway',
+            #'IsItEliteHome',
+            #'IsItEliteAway',
             'HistoricalAvgHomePoints',
             'HistoricalAvgAwayPoints',
             'FTR'
