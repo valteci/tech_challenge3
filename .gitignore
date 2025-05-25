@@ -104,3 +104,7 @@ desktop.ini
 # Pasta de dados do projeto
 data/
 cleaned_data/
+
+# pasta de assets
+public/
+

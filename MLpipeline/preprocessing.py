@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from utils import Season
+from MLpipeline.utils import Season
 from sklearn.preprocessing import LabelEncoder
 
 class Preprocessing:
@@ -29,7 +29,7 @@ class Preprocessing:
 
 
     def _load_data(self) -> None:
-        season = Season(2, 3) # 23, 24
+        season = Season(14, 15) # 23, 24
 
         while season.next():
             file_name = f'{Preprocessing.DATA_PATH}/{season.date}.csv'
@@ -642,37 +642,516 @@ class Preprocessing:
             'FTAG',
             'TotalHomeMatches',
             'TotalAwayMatches',
-            #'TotalHomeGoals',
-            #'TotalAwayGoals',
-            #'TotalHomeConceded',
-            #'TotalAwayConceded',
-            #'AverageHomeGoalsScored',
-            #'AverageAwayGoalsScored',
+            'TotalHomeGoals',
+            'TotalAwayGoals',
+            'TotalHomeConceded',
+            'TotalAwayConceded',
+            'AverageHomeGoalsScored',
+            'AverageAwayGoalsScored',
             'AverageHomeGoalsConceded',
             'AverageAwayGoalsConceded',
-            #'AverageHomePoints',
-            #'AverageAwayPoints',
+            'AverageHomePoints',
+            'AverageAwayPoints',
             'TotalHomePoints',
             'TotalAwayPoints',
-            #'AverageHomeGoalsScoredLast6',
-            #'AverageAwayGoalsScoredLast6',
-            #'AverageHomeGoalsConcededLast6',
-            #'AverageAwayGoalsConcededLast6',
-            #'AverageHomePointsLast6',
-            #'AverageAwayPointsLast6',
-            #'IsItEliteHome',
-            #'IsItEliteAway',
-            #'HistoricalAvgHomePoints',
-            #'HistoricalAvgAwayPoints',
+            'AverageHomeGoalsScoredLast6',
+            'AverageAwayGoalsScoredLast6',
+            'AverageHomeGoalsConcededLast6',
+            'AverageAwayGoalsConcededLast6',
+            'AverageHomePointsLast6',
+            'AverageAwayPointsLast6',
+            'IsItEliteHome',
+            'IsItEliteAway',
+            'HistoricalAvgHomePoints',
+            'HistoricalAvgAwayPoints',
             'FTR'
         ]
 
         self._export = self._export.loc[:, selected_features]
+     
 
+class Search:
+    def __init__(self, encoding_table: dict, data: pd.DataFrame):
+        """
+        encoding_table: um dicionário que mapeia o nome do time ao
+        seu código de encoding. Por exemplo, 
+        encoding_table['Arsenal'] retorna um inteiro.
+        """
+        self._encoding_table = encoding_table
+        self._data = data
+
+
+    def search_total_points(self, team: str | int) -> int:
+        """
+        Retorna o total de pontos do último jogo do time, já incluindo os pontos do próprio jogo:
+        - pega TotalHomePoints ou TotalAwayPoints da última linha;
+        - adiciona 3 pontos se vitória (H para casa, A para visitante);
+        - adiciona 1 ponto em caso de empate (D);
+        - soma e retorna.
+        """
+        # 1) Converte nome → código, se necessário
+        if isinstance(team, str):
+            if team not in self._encoding_table:
+                raise KeyError(f"Time '{team}' não está na tabela de encoding.")
+            code = self._encoding_table[team]
+        else:
+            code = team
+
+        # 2) Máscaras para jogos em casa ou fora
+        mask_home = self._data['HomeTeamEnc'] == code
+        mask_away = self._data['AwayTeamEnc'] == code
+        mask = mask_home | mask_away
+
+        # 3) Verifica existência
+        if not mask.any():
+            raise ValueError(f"Time (código {code}) não encontrado no DataFrame.")
+
+        # 4) Pega última linha
+        last_match = self._data[mask].iloc[-1]
+
+        # 5) Pontos acumulados até antes do jogo
+        if last_match['HomeTeamEnc'] == code:
+            base_points = int(last_match['TotalHomePoints'])
+            is_home = True
+        else:
+            base_points = int(last_match['TotalAwayPoints'])
+            is_home = False
+
+        # 6) Pontos do jogo atual, pelo FTR
+        ftr = last_match['FTR']
+        if ftr == 'D':
+            extra = 1
+        elif is_home and ftr == 'H':
+            extra = 3
+        elif (not is_home) and ftr == 'A':
+            extra = 3
+        else:
+            extra = 0
+
+        return base_points + extra
+
+
+    def search_total_matches(self, team: str | int) -> int:
+        """
+        Retorna o total de partidas do time, já incluindo o jogo atual:
+        - pega TotalHomeMatches ou TotalAwayMatches da última linha;
+        - adiciona 1 pela partida corrente.
+        """
+        # 1) Converte nome → código, se necessário
+        if isinstance(team, str):
+            if team not in self._encoding_table:
+                raise KeyError(f"Time '{team}' não está na tabela de encoding.")
+            code = self._encoding_table[team]
+        else:
+            code = team
+
+        # 2) Máscaras para jogos em casa ou fora
+        mask_home = self._data['HomeTeamEnc'] == code
+        mask_away = self._data['AwayTeamEnc'] == code
+        mask = mask_home | mask_away
+
+        # 3) Verifica existência
+        if not mask.any():
+            raise ValueError(f"Time (código {code}) não encontrado no DataFrame.")
+
+        # 4) Pega última linha
+        last_match = self._data[mask].iloc[-1]
+
+        # 5) Total de partidas até antes do jogo
+        if last_match['HomeTeamEnc'] == code:
+            base_matches = int(last_match['TotalHomeMatches'])
+        else:
+            base_matches = int(last_match['TotalAwayMatches'])
+
+        # 6) Soma a partida corrente
+        return base_matches + 1
+
+
+    def search_total_goals(self, team: str | int) -> int:
+        """
+        Retorna o total de gols marcados pelo time no campeonato, já incluindo os gols do jogo atual:
+        - pega TotalHomeGoals ou TotalAwayGoals da última linha;
+        - adiciona FTHG (se jogou em casa) ou FTAG (se jogou fora) da mesma linha.
+        """
+        # 1) Converte nome → código, se necessário
+        if isinstance(team, str):
+            if team not in self._encoding_table:
+                raise KeyError(f"Time '{team}' não está na tabela de encoding.")
+            code = self._encoding_table[team]
+        else:
+            code = team
+
+        # 2) Máscaras para jogos em casa ou fora
+        mask_home = self._data['HomeTeamEnc'] == code
+        mask_away = self._data['AwayTeamEnc'] == code
+        mask = mask_home | mask_away
+
+        # 3) Verifica existência do time no DataFrame
+        if not mask.any():
+            raise ValueError(f"Time (código {code}) não encontrado no DataFrame.")
+
+        # 4) Seleciona a última partida
+        last_match = self._data[mask].iloc[-1]
+
+        # 5) Gols acumulados até antes do jogo
+        if last_match['HomeTeamEnc'] == code:
+            base_goals = int(last_match['TotalHomeGoals'])
+            extra_goals = int(last_match['FTHG'])
+        else:
+            base_goals = int(last_match['TotalAwayGoals'])
+            extra_goals = int(last_match['FTAG'])
+
+        # 6) Retorna soma dos gols anteriores com os do jogo atual
+        return base_goals + extra_goals
+
+
+    def search_total_conceded(self, team: str | int) -> int:
+        """
+        Retorna o total de gols sofridos pelo time no campeonato, já incluindo os gols do jogo atual:
+        - pega TotalHomeConceded ou TotalAwayConceded da última linha;
+        - adiciona FTAG (se jogou em casa) ou FTHG (se jogou fora) da mesma linha.
+        """
+        # 1) Converte nome → código, se necessário
+        if isinstance(team, str):
+            if team not in self._encoding_table:
+                raise KeyError(f"Time '{team}' não está na tabela de encoding.")
+            code = self._encoding_table[team]
+        else:
+            code = team
+
+        # 2) Máscaras para jogos em casa ou fora
+        mask_home = self._data['HomeTeamEnc'] == code
+        mask_away = self._data['AwayTeamEnc'] == code
+        mask = mask_home | mask_away
+
+        # 3) Verifica existência do time no DataFrame
+        if not mask.any():
+            raise ValueError(f"Time (código {code}) não encontrado no DataFrame.")
+
+        # 4) Seleciona a última partida
+        last_match = self._data[mask].iloc[-1]
+
+        # 5) Gols sofridos acumulados até antes do jogo
+        if last_match['HomeTeamEnc'] == code:
+            base_conceded = int(last_match['TotalHomeConceded'])
+            extra_conceded = int(last_match['FTAG'])
+        else:
+            base_conceded = int(last_match['TotalAwayConceded'])
+            extra_conceded = int(last_match['FTHG'])
+
+        # 6) Retorna soma dos gols sofridos anteriores com os do jogo atual
+        return base_conceded + extra_conceded
+
+
+    def average_goals_scored(self, team: str | int) -> float:
+        """
+        Retorna a média de gols marcados pelo time no campeonato, já incluindo os gols do jogo atual:
+        - pega AverageHomeGoalsScored ou AverageAwayGoalsScored da última linha;
+        - calcula o total de gols anteriores: base_avg * base_matches;
+        - soma os gols do jogo atual (FTHG se em casa, FTAG se fora);
+        - divide pelo número de partidas anterior + 1.
+        """
+        # 1) Converte nome → código, se necessário
+        if isinstance(team, str):
+            if team not in self._encoding_table:
+                raise KeyError(f"Time '{team}' não está na tabela de encoding.")
+            code = self._encoding_table[team]
+        else:
+            code = team
+
+        # 2) Máscaras para jogos em casa ou fora
+        mask_home = self._data['HomeTeamEnc'] == code
+        mask_away = self._data['AwayTeamEnc'] == code
+        mask = mask_home | mask_away
+
+        # 3) Verifica existência do time no DataFrame
+        if not mask.any():
+            raise ValueError(f"Time (código {code}) não encontrado no DataFrame.")
+
+        # 4) Seleciona a última partida
+        last_match = self._data[mask].iloc[-1]
+
+        # 5) Extrai média e número de partidas anteriores
+        if last_match['HomeTeamEnc'] == code:
+            base_avg = float(last_match['AverageHomeGoalsScored'])
+            base_matches = int(last_match['TotalHomeMatches'])
+            extra_goals = int(last_match['FTHG'])
+        else:
+            base_avg = float(last_match['AverageAwayGoalsScored'])
+            base_matches = int(last_match['TotalAwayMatches'])
+            extra_goals = int(last_match['FTAG'])
+
+        # 6) Recalcula média incluindo o jogo atual
+        total_goals_prev = base_avg * base_matches
+        new_total_goals = total_goals_prev + extra_goals
+        new_matches = base_matches + 1
+
+        return new_total_goals / new_matches
+
+
+    def average_goals_conceded(self, team: str | int) -> float:
+        """
+        Retorna a média de gols sofridos pelo time no campeonato, já incluindo os gols do jogo atual:
+        - pega AverageHomeGoalsConceded ou AverageAwayGoalsConceded da última linha;
+        - calcula o total de gols sofridos anteriores: base_avg * base_matches;
+        - soma os gols sofridos no jogo atual (FTAG se em casa, FTHG se fora);
+        - divide pelo número de partidas anterior + 1.
+        """
+        # 1) Converte nome → código, se necessário
+        if isinstance(team, str):
+            if team not in self._encoding_table:
+                raise KeyError(f"Time '{team}' não está na tabela de encoding.")
+            code = self._encoding_table[team]
+        else:
+            code = team
+
+        # 2) Máscaras para jogos em casa ou fora
+        mask_home = self._data['HomeTeamEnc'] == code
+        mask_away = self._data['AwayTeamEnc'] == code
+        mask = mask_home | mask_away
+
+        # 3) Verifica existência do time no DataFrame
+        if not mask.any():
+            raise ValueError(f"Time (código {code}) não encontrado no DataFrame.")
+
+        # 4) Seleciona a última partida
+        last_match = self._data[mask].iloc[-1]
+
+        # 5) Extrai média de gols sofridos e número de partidas anteriores
+        if last_match['HomeTeamEnc'] == code:
+            base_avg = float(last_match['AverageHomeGoalsConceded'])
+            base_matches = int(last_match['TotalHomeMatches'])
+            extra_conceded = int(last_match['FTAG'])
+        else:
+            base_avg = float(last_match['AverageAwayGoalsConceded'])
+            base_matches = int(last_match['TotalAwayMatches'])
+            extra_conceded = int(last_match['FTHG'])
+
+        # 6) Recalcula média incluindo o jogo atual
+        total_conceded_prev = base_avg * base_matches
+        new_total_conceded = total_conceded_prev + extra_conceded
+        new_matches = base_matches + 1
+
+        return new_total_conceded / new_matches
+
+
+    def average_points(self, team: str | int) -> float:
+        """
+        Retorna a média de pontos por partida do time no campeonato, já incluindo os pontos do jogo atual:
+        - pega TotalHomePoints ou TotalAwayPoints da última linha;
+        - pega TotalHomeMatches ou TotalAwayMatches da última linha;
+        - calcula os pontos extra do jogo atual (3 por vitória, 1 por empate);
+        - soma e divide pelo número de partidas + 1.
+        """
+        # 1) Converte nome → código, se necessário
+        if isinstance(team, str):
+            if team not in self._encoding_table:
+                raise KeyError(f"Time '{team}' não está na tabela de encoding.")
+            code = self._encoding_table[team]
+        else:
+            code = team
+
+        # 2) Máscaras para jogos em casa ou fora
+        mask_home = self._data['HomeTeamEnc'] == code
+        mask_away = self._data['AwayTeamEnc'] == code
+        mask = mask_home | mask_away
+
+        # 3) Verifica existência do time no DataFrame
+        if not mask.any():
+            raise ValueError(f"Time (código {code}) não encontrado no DataFrame.")
+
+        # 4) Seleciona a última partida
+        last_match = self._data[mask].iloc[-1]
+
+        # 5) Extrai pontos e partidas acumulados até antes do jogo
+        if last_match['HomeTeamEnc'] == code:
+            base_points = int(last_match['TotalHomePoints'])
+            base_matches = int(last_match['TotalHomeMatches'])
+            is_home = True
+        else:
+            base_points = int(last_match['TotalAwayPoints'])
+            base_matches = int(last_match['TotalAwayMatches'])
+            is_home = False
+
+        # 6) Calcula pontos do jogo atual via FTR
+        ftr = last_match['FTR']
+        if ftr == 'D':
+            extra = 1
+        elif is_home and ftr == 'H':
+            extra = 3
+        elif (not is_home) and ftr == 'A':
+            extra = 3
+        else:
+            extra = 0
+
+        # 7) Recalcula média incluindo o jogo atual
+        total_points = base_points + extra
+        total_matches = base_matches + 1
+
+        return total_points / total_matches
+
+
+    def average_goals_scored_last_n(self, team: str | int, n: int) -> float:
+        """
+        Retorna a média de gols marcados pelo time nos últimos n jogos (incluindo o mais recente):
+        - Seleciona as últimas n partidas do time (casa ou fora).
+        - Para cada partida, soma FTHG se jogou em casa, ou FTAG se jogou fora.
+        - Divide o total de gols por n e retorna o resultado.
+        """
+        # 1) Valida n
+        if n <= 0:
+            raise ValueError(f"O parâmetro n deve ser maior que zero, recebeu {n}.")
+
+        # 2) Converte nome → código, se necessário
+        if isinstance(team, str):
+            if team not in self._encoding_table:
+                raise KeyError(f"Time '{team}' não está na tabela de encoding.")
+            code = self._encoding_table[team]
+        else:
+            code = team
+
+        # 3) Máscara para jogos em casa ou fora
+        mask_home = self._data['HomeTeamEnc'] == code
+        mask_away = self._data['AwayTeamEnc'] == code
+        df_team = self._data[mask_home | mask_away]
+
+        # 4) Verifica se há jogos suficientes
+        total_matches = len(df_team)
+        if total_matches < n:
+            raise ValueError(f"Time (código {code}) tem apenas {total_matches} jogos, menos que {n}.")
+
+        # 5) Seleciona as últimas n partidas
+        recent = df_team.iloc[-n:]
+
+        # 6) Soma gols marcados em cada partida
+        total_goals = 0
+        for _, match in recent.iterrows():
+            if match['HomeTeamEnc'] == code:
+                total_goals += int(match['FTHG'])
+            else:
+                total_goals += int(match['FTAG'])
+
+        # 7) Calcula e retorna a média
+        return total_goals / n
+
+
+    def average_goals_conceded_last_n(self, team: str | int, n: int) -> float:
+        """
+        Retorna a média de gols sofridos pelo time nas últimas n partidas:
+        - Seleciona as últimas n partidas do time (casa ou fora).
+        - Para cada partida, soma FTAG se jogou em casa, ou FTHG se jogou fora.
+        - Divide o total de gols sofridos por n e retorna o resultado.
+        """
+        # 1) Valida n
+        if n <= 0:
+            raise ValueError(f"O parâmetro n deve ser maior que zero, recebeu {n}.")
+
+        # 2) Converte nome → código, se necessário
+        if isinstance(team, str):
+            if team not in self._encoding_table:
+                raise KeyError(f"Time '{team}' não está na tabela de encoding.")
+            code = self._encoding_table[team]
+        else:
+            code = team
+
+        # 3) Máscaras para jogos em casa ou fora
+        mask_home = self._data['HomeTeamEnc'] == code
+        mask_away = self._data['AwayTeamEnc'] == code
+        df_team = self._data[mask_home | mask_away]
+
+        # 4) Verifica se há jogos suficientes
+        total_matches = len(df_team)
+        if total_matches < n:
+            raise ValueError(f"Time (código {code}) tem apenas {total_matches} jogos, menos que {n}.")
+
+        # 5) Seleciona as últimas n partidas
+        recent = df_team.iloc[-n:]
+
+        # 6) Soma gols sofridos em cada partida
+        total_conceded = 0
+        for _, match in recent.iterrows():
+            if match['HomeTeamEnc'] == code:
+                total_conceded += int(match['FTAG'])
+            else:
+                total_conceded += int(match['FTHG'])
+
+        # 7) Calcula e retorna a média
+        return total_conceded / n
+
+
+    
+    def average_points_last_n(self, team: str | int, n: int) -> float:
+        """
+        Retorna a média de pontos por partida do time nas últimas n partidas:
+        - Seleciona as últimas n partidas do time (casa ou fora).
+        - Para cada partida:
+            * se jogou em casa e FTR == 'H' → +3; se 'D' → +1; senão +0;
+            * se jogou fora e FTR == 'A' → +3; se 'D' → +1; senão +0.
+        - Divide o total de pontos por n e retorna o resultado.
+        """
+        # 1) Valida n
+        if n <= 0:
+            raise ValueError(f"O parâmetro n deve ser maior que zero, recebeu {n}.")
+
+        # 2) Converte nome → código, se necessário
+        if isinstance(team, str):
+            if team not in self._encoding_table:
+                raise KeyError(f"Time '{team}' não está na tabela de encoding.")
+            code = self._encoding_table[team]
+        else:
+            code = team
+
+        # 3) Filtra partidas do time
+        mask_home = self._data['HomeTeamEnc'] == code
+        mask_away = self._data['AwayTeamEnc'] == code
+        df_team = self._data[mask_home | mask_away]
+
+        # 4) Verifica se há jogos suficientes
+        total_matches = len(df_team)
+        if total_matches < n:
+            raise ValueError(f"Time (código {code}) tem apenas {total_matches} jogos, menos que {n}.")
+
+        # 5) Seleciona as últimas n partidas
+        recent = df_team.iloc[-n:]
+
+        # 6) Soma pontos em cada partida
+        total_points = 0
+        for _, match in recent.iterrows():
+            ftr = match['FTR']
+            if match['HomeTeamEnc'] == code:
+                # jogo em casa
+                if ftr == 'H':
+                    total_points += 3
+                elif ftr == 'D':
+                    total_points += 1
+            else:
+                # jogo fora
+                if ftr == 'A':
+                    total_points += 3
+                elif ftr == 'D':
+                    total_points += 1
+
+        # 7) Retorna média de pontos
+        return total_points / n
+
+
+    
+    def is_it_elite(self, team: str) -> bool:
+        # 1) Converte nome → código, se necessário
+        elite_teams = [
+            'Man City',
+            'Liverpool',
+            'Arsenal',
+            'Tottenham',
+            'Man United',
+            'Chelsea'
+        ]
+
+        if team in elite_teams:
+            return True
         
+        return False
 
-       
 
-#model = Preprocessing()
-#model.export_data()
-#model._export.to_csv('teste.csv', sep=',', index=False)
+
+

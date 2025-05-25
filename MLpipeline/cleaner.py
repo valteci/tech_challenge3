@@ -1,5 +1,5 @@
 import pandas as pd
-from utils import Season
+from MLpipeline.utils import Season
 
 base_dir = './data/england/premier_league' # diretório onde vai ser pego os dados
 saving_dir = './cleaned_data' # diretórios onde vão ser salvos os dados
@@ -74,7 +74,6 @@ def clean_all() -> None:
     _save_data(cleaned_data)
 
 
-clean_all()
     
 
 
