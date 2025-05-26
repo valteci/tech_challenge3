@@ -1,0 +1,125 @@
+/* Reset e base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Layout para footer no bottom */
+html, body {
+  height: 100%;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+}
+main.container {
+  flex: 1;
+}
+
+/* Header */
+header h1 {
+  margin: 80px 0;
+  font-size: 2rem;
+  text-align: center;
+}
+
+/* Imagens dos times */
+.team-images {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 80px;
+}
+.team-images img {
+  width: 200px;
+  height: auto;
+  margin: 0 10px;
+}
+
+/* VS text */
+.vs-text {
+  font-size: 2rem;
+  margin: 0 10px;
+}
+
+/* Selects e botão */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 80px;
+}
+.controls select,
+.controls button {
+  flex: 1 1 200px;
+  padding: 12px;
+  font-size: 1.1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.controls button {
+  cursor: pointer;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+}
+.controls button:hover {
+  background-color: #0056b3;
+}
+
+/* Resultado */
+.result {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin: 80px 0;
+}
+.result h2 {
+  margin-bottom: 10px;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 10px 0;
+  background-color: #fff;
+  margin-top: auto;
+  box-shadow: 0 -1px 2px rgba(0,0,0,0.1);
+}
+footer p {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+/* Ajustes para mobile */
+@media (max-width: 600px) {
+  header h1 {
+    font-size: 1.5rem;
+  }
+  .vs-text {
+    font-size: 1.5rem;
+  }
+  .team-images img {
+    width: 150px;
+  }
+}
+
+/* Para telas menores que 508px: cada controle em sua linha */
+@media (max-width: 508px) {
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .controls select,
+  .controls button {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+}

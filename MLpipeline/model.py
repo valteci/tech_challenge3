@@ -255,8 +255,8 @@ class Model:
         return {}
 
 
-modelo = Model('logistic_regression')
-modelo.training()
+#modelo = Model('logistic_regression')
+#modelo.training()
 #print(modelo.predict("Tottenham", 'Brighton'))
 #print(modelo.predict("Bournemouth", 'Leicester'))
 #print(modelo.predict("Fulham", 'Man City'))
@@ -266,8 +266,16 @@ modelo.training()
 #print(modelo.predict("Southampton", 'Arsenal'))
 #print(modelo.predict("Newcastle", 'Everton'))
 #print(modelo.predict("Liverpool", 'Crystal Palace'))
-print(modelo.predict("Ipswich", 'West Ham'))
+#print(modelo.predict("Ipswich", 'West Ham'))
 
-print(modelo._model_stats)
+#print(modelo._model_stats)
 
+preprocessing = Preprocessing()
+preprocessing.export_data()
+data = preprocessing._encoding_table
+string = '[\n'
+for index in data:
+    string += '"' + index + '"' + ', \n'
 
+string += ']'
+print(string)
