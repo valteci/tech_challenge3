@@ -74,7 +74,6 @@ def clean_all() -> None:
     _save_data(cleaned_data)
 
 
-    
 
 
 

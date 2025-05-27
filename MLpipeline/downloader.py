@@ -784,3 +784,34 @@ class Downloader:
                     print(f'Erro ao tentar baixar liga: {liga} ano {season.date} erro: ', e)
             return
             print('=' * 15)
+
+
+    def _baixar_england(self) -> None:
+        save_path = {
+            ENGLAND_LEAGUES[0]: './data/england/premier_league',
+            ENGLAND_LEAGUES[1]: './data/england/Championship',
+            ENGLAND_LEAGUES[2]: './data/england/League_1',
+            ENGLAND_LEAGUES[3]: './data/england/League_2',
+        }
+
+        for liga in ENGLAND_LEAGUES:
+            season = Season(92, 93)
+            while season.next():
+                try:
+                    url = f'{BASE_URL_ELITE}/{season.date}/{liga}.csv'
+                    response = requests.get(url=url, headers=HEADERS)
+                    response.raise_for_status()
+                    path = save_path[liga]
+                    filename = f'{path}/{season.date}.csv'
+                    with open(filename, 'w') as file:
+                        csv = response.text
+                        file.write(csv)
+                    
+                    print(f'CSV da {liga} ano {season.date} baixado com sucesso!')
+                    sleep(2)
+
+                except Exception as e:
+                    print(f'Erro ao tentar baixar liga: {liga} ano {season.date} erro: ', e)
+            return
+            print('=' * 15)
+

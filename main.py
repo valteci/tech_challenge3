@@ -1,1 +1,1 @@
-from MLpipeline import model
+import MLpipeline.cleaner

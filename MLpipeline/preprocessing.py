@@ -586,6 +586,7 @@ class Preprocessing:
     def _merge(self) -> None:
         self._export = pd.concat(self._datas, ignore_index=True)
 
+
     def _merge_temp(self, list_df: list[pd.DataFrame]) -> None:
         return pd.concat(list_df, ignore_index=True)
 

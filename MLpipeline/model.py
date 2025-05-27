@@ -55,6 +55,16 @@ class Model:
                 'HistoricalAvgAwayPoints',
             ]
         )
+        # features_usadas = [
+        #     'TotalHomeGoals',
+        #     'TotalAwayGoals',
+        #     'TotalHomeConceded',
+        #     'TotalAwayConceded',
+        #     'TotalHomePoints',
+        #     'TotalAwayPoints',
+        #     'IsItEliteHome',
+        #     'IsItEliteAway',
+        # ]
 
         y = self._data['FTR'].astype(str)
 
@@ -186,8 +196,6 @@ class Model:
 
     def predict(self, home_team: str, away_team: str) -> dict:
         stats = {
-            #'HomeTeamEnc': 0,
-            #'AwayTeamEnc': 0,
             'TotalHomeGoals' : 0,
             'TotalAwayGoals' : 0,
             'TotalHomeConceded' : 0,
@@ -196,8 +204,6 @@ class Model:
             'TotalAwayPoints': 0,
             'IsItEliteHome': 0,
             'IsItEliteAway': 0,
-            #'HistoricalAvgHomePoints': 0,
-            #'HistoricalAvgAwayPoints': 0,
         }
 
         #stats['HomeTeamEnc'] = self._encoding_table[home_team]
@@ -269,13 +275,3 @@ class Model:
 #print(modelo.predict("Ipswich", 'West Ham'))
 
 #print(modelo._model_stats)
-
-preprocessing = Preprocessing()
-preprocessing.export_data()
-data = preprocessing._encoding_table
-string = '[\n'
-for index in data:
-    string += '"' + index + '"' + ', \n'
-
-string += ']'
-print(string)

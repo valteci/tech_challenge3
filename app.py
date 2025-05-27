@@ -6,6 +6,7 @@ pipeline = Pipeline()
 pipeline.raw_data_update()
 pipeline.clear_data()
 pipeline.load_model()
+pipeline.print_model_stats()
 
 
 # Rota raiz: retorna uma página HTML simples
@@ -32,20 +33,6 @@ def predict():
 
 
 
-# Rota que recebe os times e os dados de entrada manualmente
-@app.route('/predict_custom', methods=['POST'])
-def predict_custom():
-    data = request.get_json()
-    
-    # Aqui você pode extrair todos os dados necessários
-    # Por exemplo: gols, pontos, estatísticas customizadas etc.
-    # Vamos só simular uma resposta por agora
-    result = {
-        "home_win": 0.60,
-        "draw": 0.20,
-        "away_win": 0.20
-    }
-    return jsonify(result)
 
 
 if __name__ == '__main__':
