@@ -269,13 +269,3 @@ class Model:
 #print(modelo.predict("Ipswich", 'West Ham'))
 
 #print(modelo._model_stats)
-
-preprocessing = Preprocessing()
-preprocessing.export_data()
-data = preprocessing._encoding_table
-string = '[\n'
-for index in data:
-    string += '"' + index + '"' + ', \n'
-
-string += ']'
-print(string)

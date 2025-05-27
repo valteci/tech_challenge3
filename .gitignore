@@ -102,6 +102,6 @@ desktop.ini
 *.log
 
 # Pasta de dados do projeto
-data/
-cleaned_data/
+#data/
+#cleaned_data/
 

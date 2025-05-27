@@ -1,0 +1,553 @@
+HomeTeam,AwayTeam,FTHG,FTAG,FTR
+Arsenal,West Ham,2,0,H
+Blackburn,Tottenham,0,2,A
+Coventry,Nott'm Forest,0,3,A
+Derby,Leeds,3,3,D
+Everton,Newcastle,2,0,H
+Middlesbrough,Liverpool,3,3,D
+Sheffield Weds,Aston Villa,2,1,H
+Sunderland,Leicester,0,0,D
+Wimbledon,Man United,0,3,A
+Southampton,Chelsea,0,0,D
+Liverpool,Arsenal,2,0,H
+Leeds,Sheffield Weds,0,2,A
+Aston Villa,Blackburn,1,0,H
+Chelsea,Middlesbrough,1,0,H
+Leicester,Southampton,2,1,H
+Man United,Everton,2,2,D
+Newcastle,Wimbledon,2,0,H
+Nott'm Forest,Sunderland,1,4,A
+Tottenham,Derby,1,1,D
+West Ham,Coventry,1,1,D
+Aston Villa,Derby,2,0,H
+Chelsea,Coventry,2,0,H
+Leicester,Arsenal,0,2,A
+Liverpool,Sunderland,0,0,D
+Newcastle,Sheffield Weds,1,2,A
+Nott'm Forest,Middlesbrough,1,1,D
+Tottenham,Everton,0,0,D
+West Ham,Southampton,2,1,H
+Man United,Blackburn,2,2,D
+Leeds,Wimbledon,1,0,H
+Sheffield Weds,Leicester,2,1,H
+Arsenal,Chelsea,3,3,D
+Blackburn,Leeds,0,1,A
+Coventry,Liverpool,0,1,A
+Derby,Man United,1,1,D
+Everton,Aston Villa,0,1,A
+Middlesbrough,West Ham,4,1,H
+Southampton,Nott'm Forest,2,2,D
+Sunderland,Newcastle,1,2,A
+Wimbledon,Tottenham,1,0,H
+Aston Villa,Arsenal,2,2,D
+Leeds,Man United,0,4,A
+Liverpool,Southampton,2,1,H
+Middlesbrough,Coventry,4,0,H
+Nott'm Forest,Leicester,0,0,D
+Sheffield Weds,Chelsea,0,2,A
+Tottenham,Newcastle,1,2,A
+Wimbledon,Everton,4,0,H
+Sunderland,West Ham,0,0,D
+Blackburn,Derby,1,2,A
+Coventry,Leeds,2,1,H
+Derby,Sunderland,1,0,H
+Everton,Middlesbrough,1,2,A
+Man United,Nott'm Forest,4,1,H
+Newcastle,Blackburn,2,1,H
+Southampton,Tottenham,0,1,A
+West Ham,Wimbledon,0,2,A
+Chelsea,Aston Villa,1,1,D
+Leicester,Liverpool,0,3,A
+Arsenal,Sheffield Weds,4,1,H
+Aston Villa,Man United,0,0,D
+Blackburn,Everton,1,1,D
+Leeds,Newcastle,0,1,A
+Liverpool,Chelsea,5,1,H
+Middlesbrough,Arsenal,0,2,A
+Nott'm Forest,West Ham,0,2,A
+Sheffield Weds,Derby,0,0,D
+Sunderland,Coventry,1,0,H
+Tottenham,Leicester,1,2,A
+Wimbledon,Southampton,3,1,H
+Arsenal,Sunderland,2,0,H
+Chelsea,Nott'm Forest,1,1,D
+Coventry,Blackburn,0,0,D
+Derby,Wimbledon,0,2,A
+Everton,Sheffield Weds,2,0,H
+Leicester,Leeds,1,0,H
+Southampton,Middlesbrough,4,0,H
+Man United,Tottenham,2,0,H
+West Ham,Liverpool,1,2,A
+Newcastle,Aston Villa,4,3,H
+Blackburn,Arsenal,0,2,A
+Derby,Newcastle,0,1,A
+Everton,West Ham,2,1,H
+Leeds,Nott'm Forest,2,0,H
+Leicester,Chelsea,1,3,A
+Man United,Liverpool,1,0,H
+Tottenham,Aston Villa,1,0,H
+Wimbledon,Sheffield Weds,4,2,H
+Coventry,Southampton,1,1,D
+Sunderland,Middlesbrough,2,2,D
+Arsenal,Coventry,0,0,D
+Aston Villa,Leeds,2,0,H
+Chelsea,Wimbledon,2,4,A
+Middlesbrough,Tottenham,0,3,A
+Nott'm Forest,Derby,1,1,D
+Sheffield Weds,Blackburn,1,1,D
+Southampton,Sunderland,3,0,H
+West Ham,Leicester,1,0,H
+Newcastle,Man United,5,0,H
+Arsenal,Leeds,3,0,H
+Chelsea,Tottenham,3,1,H
+Coventry,Sheffield Weds,0,0,D
+Leicester,Newcastle,2,0,H
+Middlesbrough,Wimbledon,0,0,D
+Southampton,Man United,6,3,H
+Sunderland,Aston Villa,1,0,H
+West Ham,Blackburn,2,1,H
+Liverpool,Derby,2,1,H
+Nott'm Forest,Everton,0,1,A
+Aston Villa,Nott'm Forest,2,0,H
+Derby,Leicester,2,0,H
+Leeds,Sunderland,3,0,H
+Man United,Chelsea,1,2,A
+Sheffield Weds,Southampton,1,1,D
+Tottenham,West Ham,1,0,H
+Wimbledon,Arsenal,2,2,D
+Blackburn,Liverpool,3,0,H
+Newcastle,Middlesbrough,3,1,H
+Everton,Coventry,1,1,D
+Aston Villa,Leicester,1,3,A
+Blackburn,Chelsea,1,1,D
+Everton,Southampton,7,1,H
+Leeds,Liverpool,0,2,A
+Man United,Arsenal,1,0,H
+Newcastle,West Ham,1,1,D
+Tottenham,Sunderland,2,0,H
+Wimbledon,Coventry,2,2,D
+Derby,Middlesbrough,2,1,H
+Sheffield Weds,Nott'm Forest,2,0,H
+Liverpool,Everton,1,1,D
+Chelsea,Newcastle,1,1,D
+Coventry,Aston Villa,1,2,A
+Leicester,Everton,1,2,A
+Liverpool,Wimbledon,1,1,D
+Middlesbrough,Man United,2,2,D
+Southampton,Leeds,0,2,A
+Sunderland,Sheffield Weds,1,1,D
+West Ham,Derby,1,1,D
+Arsenal,Tottenham,3,1,H
+Nott'm Forest,Blackburn,2,2,D
+Aston Villa,Middlesbrough,1,0,H
+Blackburn,Southampton,2,1,H
+Derby,Coventry,2,1,H
+Everton,Sunderland,1,3,A
+Man United,Leicester,3,1,H
+Newcastle,Arsenal,1,2,A
+Sheffield Weds,West Ham,0,0,D
+Wimbledon,Nott'm Forest,1,0,H
+Leeds,Chelsea,2,0,H
+Tottenham,Liverpool,0,2,A
+Middlesbrough,Leicester,0,2,A
+Arsenal,Southampton,3,1,H
+West Ham,Aston Villa,0,2,A
+Arsenal,Derby,2,2,D
+Chelsea,Everton,2,2,D
+Coventry,Tottenham,1,2,A
+Leicester,Blackburn,1,1,D
+Liverpool,Sheffield Weds,0,1,A
+Middlesbrough,Leeds,0,0,D
+Southampton,Aston Villa,0,1,A
+Sunderland,Wimbledon,1,3,A
+West Ham,Man United,2,2,D
+Nott'm Forest,Newcastle,0,0,D
+Leeds,Tottenham,0,0,D
+Liverpool,Middlesbrough,5,1,H
+Wimbledon,Blackburn,1,0,H
+Sunderland,Chelsea,3,0,H
+Derby,Everton,0,1,A
+Coventry,Newcastle,2,1,H
+Liverpool,Nott'm Forest,4,2,H
+Sheffield Weds,Man United,1,1,D
+Chelsea,West Ham,3,1,H
+Everton,Leeds,0,0,D
+Leicester,Coventry,0,2,A
+Man United,Sunderland,5,0,H
+Nott'm Forest,Arsenal,2,1,H
+Southampton,Derby,3,1,H
+Tottenham,Sheffield Weds,1,1,D
+Aston Villa,Wimbledon,5,0,H
+Newcastle,Liverpool,1,1,D
+Aston Villa,Chelsea,0,2,A
+Blackburn,Newcastle,1,0,H
+Leeds,Coventry,1,3,A
+Liverpool,Leicester,1,1,D
+Middlesbrough,Everton,4,2,H
+Nott'm Forest,Man United,0,4,A
+Sheffield Weds,Arsenal,0,0,D
+Sunderland,Derby,2,0,H
+Tottenham,Southampton,3,1,H
+Arsenal,Aston Villa,2,2,D
+Chelsea,Sheffield Weds,2,2,D
+Coventry,Middlesbrough,3,0,H
+Derby,Blackburn,0,0,D
+Everton,Wimbledon,1,3,A
+Leicester,Nott'm Forest,2,2,D
+Man United,Leeds,1,0,H
+Newcastle,Tottenham,7,1,H
+West Ham,Sunderland,2,0,H
+Southampton,Liverpool,0,1,A
+Arsenal,Middlesbrough,2,0,H
+Chelsea,Liverpool,1,0,H
+Coventry,Sunderland,2,2,D
+Everton,Blackburn,0,2,A
+Man United,Aston Villa,0,0,D
+Newcastle,Leeds,3,0,H
+West Ham,Nott'm Forest,0,1,A
+Aston Villa,Newcastle,2,2,D
+Blackburn,Coventry,4,0,H
+Leeds,Leicester,3,0,H
+Liverpool,West Ham,0,0,D
+Middlesbrough,Southampton,0,1,A
+Nott'm Forest,Chelsea,2,0,H
+Sheffield Weds,Everton,2,1,H
+Sunderland,Arsenal,1,0,H
+Wimbledon,Derby,1,1,D
+Tottenham,Man United,1,2,A
+Chelsea,Derby,3,1,H
+Coventry,Man United,0,2,A
+Leicester,Wimbledon,1,0,H
+Liverpool,Aston Villa,3,0,H
+Middlesbrough,Sheffield Weds,4,2,H
+Southampton,Newcastle,2,2,D
+Sunderland,Blackburn,0,0,D
+Arsenal,Everton,3,1,H
+Nott'm Forest,Tottenham,2,1,H
+West Ham,Leeds,0,2,A
+Aston Villa,Sheffield Weds,0,1,A
+Leeds,Derby,0,0,D
+Leicester,Sunderland,1,1,D
+Man United,Wimbledon,2,1,H
+Newcastle,Everton,4,1,H
+Nott'm Forest,Coventry,0,1,A
+Tottenham,Blackburn,2,1,H
+West Ham,Arsenal,1,2,A
+Aston Villa,Sunderland,1,0,H
+Blackburn,West Ham,2,1,H
+Derby,Liverpool,0,1,A
+Everton,Nott'm Forest,2,0,H
+Leeds,Arsenal,0,0,D
+Man United,Southampton,2,1,H
+Sheffield Weds,Coventry,0,0,D
+Tottenham,Chelsea,1,2,A
+Wimbledon,Middlesbrough,1,1,D
+Newcastle,Leicester,4,3,H
+Derby,West Ham,1,0,H
+Tottenham,Arsenal,0,0,D
+Arsenal,Man United,1,2,A
+Aston Villa,Coventry,2,1,H
+Derby,Sheffield Weds,2,2,D
+Liverpool,Leeds,4,0,H
+Chelsea,Man United,1,1,D
+Coventry,Everton,0,0,D
+Leicester,Derby,4,2,H
+Liverpool,Blackburn,0,0,D
+Middlesbrough,Newcastle,0,1,A
+Nott'm Forest,Aston Villa,0,0,D
+Southampton,Sheffield Weds,2,3,A
+Sunderland,Leeds,0,1,A
+Arsenal,Wimbledon,0,1,A
+West Ham,Tottenham,4,3,H
+Southampton,Wimbledon,0,0,D
+Blackburn,Sunderland,1,0,H
+Derby,Chelsea,3,2,H
+Everton,Arsenal,0,2,A
+Leeds,West Ham,1,0,H
+Man United,Coventry,3,1,H
+Newcastle,Southampton,0,1,A
+Sheffield Weds,Middlesbrough,3,1,H
+Tottenham,Nott'm Forest,0,1,A
+Wimbledon,Leicester,1,3,A
+Aston Villa,Liverpool,1,0,H
+Coventry,Wimbledon,1,1,D
+Sunderland,Tottenham,0,4,A
+Chelsea,Blackburn,1,1,D
+Leicester,Aston Villa,1,0,H
+Middlesbrough,Derby,6,1,H
+Nott'm Forest,Sheffield Weds,0,3,A
+Southampton,Everton,2,2,D
+Arsenal,Nott'm Forest,2,0,H
+Coventry,Leicester,0,0,D
+Leeds,Everton,1,0,H
+Sunderland,Man United,2,1,H
+Liverpool,Newcastle,4,3,H
+Blackburn,Nott'm Forest,1,1,D
+Leeds,Southampton,0,0,D
+Sheffield Weds,Sunderland,2,1,H
+West Ham,Chelsea,3,2,H
+Aston Villa,West Ham,0,0,D
+Blackburn,Wimbledon,3,1,H
+Everton,Derby,1,0,H
+Leicester,Middlesbrough,1,3,A
+Man United,Sheffield Weds,2,0,H
+Newcastle,Coventry,4,0,H
+Nott'm Forest,Liverpool,1,1,D
+Southampton,Arsenal,0,2,A
+Tottenham,Leeds,1,0,H
+Chelsea,Sunderland,6,2,H
+Wimbledon,West Ham,1,1,D
+Chelsea,Southampton,1,0,H
+Leicester,Tottenham,1,1,D
+Middlesbrough,Blackburn,2,1,H
+Blackburn,Aston Villa,0,2,A
+Coventry,West Ham,1,3,A
+Derby,Tottenham,4,2,H
+Everton,Man United,0,2,A
+Middlesbrough,Chelsea,1,0,H
+Sheffield Weds,Leeds,2,2,D
+Southampton,Leicester,2,2,D
+Sunderland,Nott'm Forest,1,1,D
+Wimbledon,Newcastle,1,1,D
+Arsenal,Liverpool,1,2,A
+Middlesbrough,Nott'm Forest,1,1,D
+Aston Villa,Everton,3,1,H
+Chelsea,Arsenal,0,3,A
+Man United,Derby,2,3,A
+Newcastle,Sunderland,1,1,D
+Nott'm Forest,Southampton,1,3,A
+Tottenham,Wimbledon,1,0,H
+Liverpool,Coventry,1,2,A
+Leeds,Blackburn,0,0,D
+Coventry,Chelsea,3,1,H
+Derby,Southampton,1,1,D
+Everton,Leicester,1,1,D
+Sheffield Weds,Tottenham,2,1,H
+West Ham,Middlesbrough,0,0,D
+Wimbledon,Aston Villa,0,2,A
+Arsenal,Leicester,2,0,H
+Blackburn,Man United,2,3,A
+Derby,Aston Villa,2,1,H
+Everton,Tottenham,1,0,H
+Southampton,West Ham,2,0,H
+Sheffield Weds,Newcastle,1,1,D
+Sunderland,Liverpool,1,2,A
+Everton,Liverpool,1,1,D
+Newcastle,Chelsea,3,1,H
+Wimbledon,Leeds,2,0,H
+Arsenal,Blackburn,1,1,D
+Aston Villa,Tottenham,1,1,D
+Chelsea,Leicester,2,1,H
+Liverpool,Man United,1,3,A
+Middlesbrough,Sunderland,0,1,A
+Newcastle,Derby,3,1,H
+Nott'm Forest,Leeds,1,1,D
+Sheffield Weds,Wimbledon,3,1,H
+Southampton,Coventry,2,2,D
+West Ham,Everton,2,2,D
+Coventry,Arsenal,1,1,D
+Blackburn,Sheffield Weds,4,1,H
+Leeds,Aston Villa,0,0,D
+Sunderland,Southampton,0,1,A
+Wimbledon,Chelsea,0,1,A
+Derby,Nott'm Forest,0,0,D
+Leicester,West Ham,0,1,A
+Tottenham,Middlesbrough,1,0,H
+Arsenal,Newcastle,0,1,A
+Chelsea,Leeds,0,0,D
+Coventry,Derby,1,2,A
+Leicester,Man United,2,2,D
+Liverpool,Tottenham,2,1,H
+Middlesbrough,Aston Villa,3,2,H
+Nott'm Forest,Wimbledon,1,1,D
+Southampton,Blackburn,2,0,H
+Sunderland,Everton,3,0,H
+West Ham,Sheffield Weds,5,1,H
+Man United,Middlesbrough,3,3,D
+West Ham,Newcastle,0,0,D
+Wimbledon,Liverpool,2,1,H
+Leicester,Sheffield Weds,1,0,H
+Blackburn,Middlesbrough,0,0,D
+Man United,Newcastle,0,0,D
+Aston Villa,Southampton,1,0,H
+Blackburn,Leicester,2,4,A
+Derby,Arsenal,1,3,A
+Everton,Chelsea,1,2,A
+Leeds,Middlesbrough,1,1,D
+Man United,West Ham,2,0,H
+Newcastle,Nott'm Forest,5,0,H
+Sheffield Weds,Liverpool,1,1,D
+Tottenham,Coventry,1,2,A
+Wimbledon,Sunderland,1,0,H
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
