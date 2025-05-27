@@ -2,6 +2,10 @@ from flask import Flask, request, jsonify, render_template
 from MLpipeline.pipeline import Pipeline
 
 app = Flask(__name__)
+pipeline = Pipeline()
+pipeline.raw_data_update()
+pipeline.clear_data()
+pipeline.load_model()
 
 
 # Rota raiz: retorna uma página HTML simples
@@ -22,11 +26,8 @@ def predict():
 
     # Aqui você chamaria seu modelo com base apenas nos nomes
     # Por enquanto, vamos retornar um mock
-    result = {
-        "home_win": 0.45,
-        "draw": 0.30,
-        "away_win": 0.25
-    }
+
+    result = pipeline.predict(home_team, away_team)
     return jsonify(result)
 
 

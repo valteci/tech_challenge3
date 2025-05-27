@@ -633,7 +633,7 @@ class Preprocessing:
         self._merge()
         self._export.to_csv('real.csv', sep=',', index=False)
         self._codificar_times()
-        self._export.to_csv('codificados.csv', sep=',', index=False)
+        #self._export.to_csv('codificados.csv', sep=',', index=False)
 
         selected_features = [
             'HomeTeamEnc',

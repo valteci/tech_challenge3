@@ -84,19 +84,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const resultDraw      = document.getElementById('result-draw');
   const resultAway      = document.getElementById('result-away');
 
-  // Preenche os selects
+  // Popula os selects
   teams.forEach(team => {
-    const opt1 = new Option(team, team);
-    const opt2 = new Option(team, team);
-    homeSelect.add(opt1);
-    awaySelect.add(opt2);
+    homeSelect.add(new Option(team, team));
+    awaySelect.add(new Option(team, team));
   });
 
   // Atualiza opções desabilitando o time já escolhido
   function updateSelectOptions() {
     const homeTeam = homeSelect.value;
     const awayTeam = awaySelect.value;
-
     Array.from(homeSelect.options).forEach(opt => {
       opt.disabled = (opt.value && opt.value === awayTeam);
     });
@@ -105,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Atualiza as imagens de acordo com o time selecionado
+  // Atualiza as imagens
   function updateImages() {
     if (teamImages[homeSelect.value]) {
       leftImage.src = teamImages[homeSelect.value];
@@ -115,27 +112,40 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Define valores padrão e renderiza estado inicial
+  homeSelect.value = "Arsenal";
+  awaySelect.value = "Liverpool";
+  updateSelectOptions();
+  updateImages();
+
+  // Escuta mudanças (caso o usuário queira trocar antes de clicar)
   homeSelect.addEventListener('change', () => {
     updateSelectOptions();
     updateImages();
   });
-
   awaySelect.addEventListener('change', () => {
     updateSelectOptions();
     updateImages();
   });
 
-  // Mock de chamada ao backend
-  predictButton.addEventListener('click', () => {
-    const mock = {
-      home_win: (Math.random() * 0.6 + 0.2).toFixed(2),
-      draw:     (Math.random() * 0.4 + 0.1).toFixed(2),
-      away_win: (Math.random() * 0.6 + 0.2).toFixed(2)
-    };
-
-    resultHome.textContent = `H: ${mock.home_win}`;
-    resultDraw.textContent = `D: ${mock.draw}`;
-    resultAway.textContent = `A: ${mock.away_win}`;
-    resultSection.style.display = 'block';
+  // Chamada real ao backend
+  predictButton.addEventListener('click', async () => {
+    const homeTeam = homeSelect.value;
+    const awayTeam = awaySelect.value;
+    try {
+      const response = await fetch('/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ home_team: homeTeam, away_team: awayTeam })
+      });
+      if (!response.ok) throw new Error(`Status ${response.status}`);
+      const data = await response.json();
+      resultHome.textContent = `H: ${data.H}`;
+      resultDraw.textContent = `D: ${data.D}`;
+      resultAway.textContent = `A: ${data.A}`;
+      resultSection.style.display = 'block';
+    } catch (err) {
+      alert(`Erro ao calcular probabilidades: ${err.message}`);
+    }
   });
 });

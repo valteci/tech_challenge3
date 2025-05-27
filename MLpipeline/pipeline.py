@@ -7,6 +7,7 @@ class Pipeline():
 
     def __init__(self):
         self._model: Model = None
+        self._model_stats: dict = None
 
 
     def download_raw_dataset(self)-> None:
@@ -14,7 +15,7 @@ class Pipeline():
         downloader._baixar_england()
 
 
-    def schedule_raw_data_update(self) -> None:
+    def raw_data_update(self) -> None:
         downloader = Downloader()
         downloader._atualizar_england()
 
@@ -24,12 +25,13 @@ class Pipeline():
 
 
     def load_model(self) -> None:
-        pass
+        self._model = Model('logistic_regression')
+        self._model.training()
 
 
     def get_model_stats(self) -> None:
         pass
 
 
-    def predict(self) -> None:
-        pass
+    def predict(self, home_team: str, away_team: str) -> dict:
+        return self._model.predict(home_team, away_team)

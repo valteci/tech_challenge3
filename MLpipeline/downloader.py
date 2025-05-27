@@ -782,5 +782,5 @@ class Downloader:
 
                 except Exception as e:
                     print(f'Erro ao tentar baixar liga: {liga} ano {season.date} erro: ', e)
-            
+            return
             print('=' * 15)

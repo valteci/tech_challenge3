@@ -1,51 +1,39 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Previsor de Partidas de Futebol</title>
-    <link rel="stylesheet" 
-          href="{{ url_for('static', filename='css/style.css')}}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Previsor de Partidas de Futebol</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <header>
-        <h1>Previsor de Partidas de Futebol</h1>
-    </header>
-    <main class="container">
-        <!-- Imagens dos times -->
-        <section class="team-images">
-            <img id="left-team-image" 
-                 src="{{ url_for('static', filename='images/arsenal.png')}}"
-                 alt="Time da Casa">
-            <h2 class="vs-text">VS</h2>
-            <img id="right-team-image"
-                 src="{{ url_for('static', filename='images/liverpool.png')}}"
-                 alt="Time Visitante">
-        </section>
+  <header>
+    <h1>Previsor de Partidas de Futebol</h1>
+  </header>
+  <main class="container">
+    <section class="team-images">
+      <img id="left-team-image" src="{{ url_for('static', filename='images/placeholder_left.png') }}" alt="Time da Casa">
+      <h2 class="vs-text">VS</h2>
+      <img id="right-team-image" src="{{ url_for('static', filename='images/placeholder_right.png') }}" alt="Time Visitante">
+    </section>
 
-        <!-- Selects e botão -->
-        <section class="controls">
-            <select id="home-team-select">
-                <option value="" disabled selected>Selecione o time da casa</option>
-            </select>
-            <select id="away-team-select">
-                <option value="" disabled selected>Selecione o time visitante</option>
-            </select>
-            <button id="predict-button">Calcular Probabilidades</button>
-        </section>
+    <section class="controls">
+      <select id="home-team-select"></select>
+      <select id="away-team-select"></select>
+      <button id="predict-button">Calcular Probabilidades</button>
+    </section>
 
-        <!-- Resultado (inicialmente oculto) -->
-        <section id="result" class="result" style="display:none;">
-            <h2 id="result-home">H: --</h2>
-            <h2 id="result-draw">D: --</h2>
-            <h2 id="result-away">A: --</h2>
-        </section>
-    </main>
+    <section id="result" class="result" style="display:none;">
+      <h2 id="result-home">H: --</h2>
+      <h2 id="result-draw">D: --</h2>
+      <h2 id="result-away">A: --</h2>
+    </section>
+  </main>
 
-    <footer>
-        <p>© 2025 Seu Nome</p>
-    </footer>
+  <footer>
+    <p>© 2025 Valteci Marcelino Coelho Junior</p>
+  </footer>
 
-    <script src="{{ url_for('static', filename='js/script.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
