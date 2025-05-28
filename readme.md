@@ -113,7 +113,7 @@ Abaixo temos a matriz de correlação de um dos CSVs da nossa base de dados brut
 
 
 ### Gerando novas features
-A partir das features que já estão nos CSVs, foi possível gerar novas features que ajudaram bastante o desempenho dos modelos.
+A partir das features que já estão nos CSVs, foi possível gerar novas features que ajudaram bastante o desempenho dos modelos. A features foram geradas nos arquivos /MLpipeline/preprocessing.py.
 
 Features Geradas
 - **Gols marcados**: representa o total de gols marcados por um time na temporada em todos os jogos anteriores naquela mesma temporada. Tem o propósito de avaliar a força ofensiva geral do time na temporada. Foi adicionado à base de dados com os nomes: TotalHomeGoals e TotalAwayGoals.
@@ -122,53 +122,81 @@ Features Geradas
 
 - **Total de partidas jogadas**: representa o total de partidas jogadas por um time no campeonato da premier league. A premier League tem no total 38 partidas. Alguns times tendem a jogar de maneiras diferentes em relação ao final ou ao início da competição. Foi adicionado à base de dados com os nomes: TotalHomeMatches e TotalAwayMatches.
 
-- **Total de pontos**: 
+- **Total de pontos**: representa o total de pontos que um time fez em todas as partidas anteriores daquele campeonato. Tem o propósito de avaliar o desempenho geral time na competição. Foi adicionado à base de dados com os nomes: TotalHomePoints e TotalAwayPoints
+
+- **Time elite**: é uma feature booleana e representa se o time é ou não de elite. Um time é elite se ele é um dos seguinte times: [Man City, Man United, Liverpool, Chelsea, Tottenham]. Esses times são historicamente ricos e com grandes torcidas, o que dá a eles muita vantagem frente a outros times. Por isso foi colocada essa feature para sinalizar a presença desses times na partida, esse feature aumentou consideravelmente o desempenho do modelo. Foi adicionada à base de dados com os nomes: IsItEliteHome e IsItEliteAway
+
+- **Features de média**: Foram criadas médias das features anteriores, ou seja, média de gols marcados por um time, média de gols sofridos, média pontos por partida. Também foi criado média das últimas 6 partidas e também uma média histórica de total de ponto que representa quantos pontos um time fez em média por campeonato desde 1993. As seguinte features foram adicionadas ao database: AverageHomeGoalsScored, AverageAwayGoalsScored, AverageHomeGoalsConceded, AverageAwayGoalsConceded, AverageHomePoints,
+AverageAwayPoints, AverageHomeGoalsScoredLast6, AverageAwayGoalsScoredLast6, AverageHomeGoalsConcededLast6, AverageAwayGoalsConcededLast6, AverageHomePointsLast6, AverageAwayPointsLast6, HistoricalAvgHomePoints e HistoricalAvgAwayPoints.
 
 
 
 ### Features selecionadas
+Apesar de gerar várias features novas, apenas algumas foram usadas para treinar o modelo, isso porque muitas delas apresentavam auto grau de correlacionamento, mesmo as novas features apresentaram um alto grau de correlacionamento, como pode ser visto a matriz de correlação abaixox com todas as features geradas pelo modelo:
+![Matriz de correlação](./images/correlacao_novas_features.png)
 
 
+Dado esse contexto, a combinação de feature que gerou o melhor resultado foi a seguinte e foram elas que foram selecionadas para treinar o modelo: ['TotalHomeGoals', 'TotalAwayGoals', 'TotalHomeConceded', 'TotalAwayConceded', 'TotalHomePoints', 'TotalAwayPoints', 'IsItEliteHome', 'IsItEliteAway']
+
+Dados como número de faltas, cartões, dia e tempo da partida, também não ajudaram no desempenho dos modelos.
 
 ### Falta de dados
+Apesar de haver dados de todos os jogos da Premier League desde 1993, infelizmente, não foi possível achar dados da formação das equipes no momento do jogo, ou seja, se um time estava com desfalques, se estava poupando jogadores para um jogo mais importante ou se estava jogando com um time alternativo. Essas informações têm grande influência nos resultados da partida e muitos jogos na base de dados são afetados por essa condição, porém não foi possível passar essa informação ao modelo pela falta desses dados.
 
-
-
-## Etapa de pré-processamento
+O modelo poderia ter se saído muito melhor se tivesse com esses dados, já que, às vezes, um time perde um jogo não porque está ruim, mas porque não está jogando com sua força total.
 
 
 ## Modelos utilizados
+3 modelos foram utilizados e testados nesse projeto: regressão logística, lightgbm e XGboost. Os modelos foram implementados dentro do arquivo /MLpipeline/model.py
 
+Para escolher qual modelo utilizar na hora de rodar a aplicação, altere a função "load_model" que está dentro de MLpipeline/pipeline.py, nesse caso, você precisa alterar a string do parâmetro que está sendo passado pela função. Está sendo usado regressão logística, mas os possíveis valores são esse:
+- logistic_regression
+- lightgbm
+- xgboost
 
-
-
-
-
-Detalhe os algoritmos de ML escolhidos, hiperparâmetros, estratégias de validação e justificativas para cada escolha.
-
-
+Cada um deles carrega o modelo correspondente para ser usado pela aplicação.
 
 
 ## Resultados obtidos
 
-Mostre métricas de performance (ex.: acurácia, recall, F1-score, log-loss), comparações entre modelos e interpretação dos resultados.
+Para ver os resultados obtidos sendo gerados de fato pelo código, basta executar o código e as informações de desempenho do modelo vão aparecer no console da aplicação, conforme o modelo selecionado.
+
+Foram utilizados as métricas de log-loss e matriz de confusão como métricas dos modelos. O log-loss representa o quão bom o modelo em prever as probabilidades das classes e não se importa muito com a classe em si prevista, o que no contexto desse projeto é adequado, já que é preciso saber a probabilidade da classe e não qual delas vai acontecer.
+
+### Regressão logística
+![Matriz de confusão](./images/regressao_log_matriz.png)
+
+___________________________________________
+
+### lightgbm
+![Matriz de confusão](./images/lightgbm_matriz.png)
+
+___________________________________________
+
+### XGboost
+![Matriz de confusão](./images/xgboost_matriz.png)
 
 
-
-## Pipeline
-
-Explique passo a passo o fluxo de dados, desde a ingestão até a geração de previsões, incluindo tecnologias e frameworks.
-
-## Arquitetura
-
-Descreva a arquitetura geral da solução (diagrama, componentes, integrações) e como cada parte se conecta.
 
 ## Como rodar o projeto
 
-1. Pré-requisitos: lista de dependências.
-2. Instalação: comandos para configurar o ambiente.
-3. Execução: como iniciar a aplicação localmente.
+Caso queira rodar esse projeto localmente, recomenda-se usar o docker. Caso não tenha docker, [baixe aqui](https://docs.docker.com/get-started/get-docker/). Mude a branch desse projeto para deploy, rode o seguinte comando no diretório raiz do projeto para fazer o build da imagem:
+```bash
+docker build -t projeto-ML .
+```
+
+Depois, basta executar o comando abaixo para o site começar a rodar localmente:
+```bash
+docker run -dp 3000:3000 --name site projeto-ML
+```
+
+Depois disso, basta acessar o site por meio da url: http://127.0.0.1:3000/
+
 
 ## Deploy
 
-Detalhe o processo de deploy em produção, ambientes suportados e comandos necessários.
+O projeto foi implantado como uma site no render e está acessível pela seguinte URL: https://tech-challenge3.onrender.com/
+
+Imagem do site do projeto:
+![alt text](./images/site.png)
+

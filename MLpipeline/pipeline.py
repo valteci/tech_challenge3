@@ -26,12 +26,12 @@ class Pipeline():
 
     def load_model(self) -> None:
         # modelos: logistic_regression, xgboost, lightgbm
-        self._model = Model('logistic_regression')
+        self._model = Model('xgboost')
         self._model.training()
 
 
     def print_model_stats(self) -> None:
-        print('aqui: ', self._model._model_stats)
+        self._model.print_model_stats()
 
 
     def predict(self, home_team: str, away_team: str) -> dict:

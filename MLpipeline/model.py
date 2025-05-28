@@ -9,6 +9,7 @@ from sklearn.metrics import classification_report, accuracy_score
 import numpy as np
 import xgboost as xgb
 from xgboost.callback import EarlyStopping
+from sklearn.metrics import confusion_matrix
 
 
 
@@ -111,6 +112,11 @@ class Model:
         probs = self._model.predict_proba(X_test)
         preds = self._model.predict(X_test)
 
+        self._y_test = y_test
+        self._preds = preds
+        cm = confusion_matrix(y_test, preds)
+        self._model_stats['confusion-matrix'] = cm
+
         self._model_stats['Log-loss'] = log_loss(y_test, probs)
         self._model_stats['Accuracy'] = accuracy_score(y_test, preds)
 
@@ -141,6 +147,12 @@ class Model:
         # 7. Previsões
         probs = self._model.predict_proba(x_test_scaled)
         preds = self._model.predict(x_test_scaled)
+
+        self._y_test = y_test
+        self._preds = preds
+
+        cm = confusion_matrix(y_test, preds)
+        self._model_stats['confusion-matrix'] = cm
 
         # 8. Avaliação
         self._model_stats['Log-loss'] = log_loss(y_test, probs)
@@ -189,6 +201,12 @@ class Model:
         # 6. Calcula métricas numéricas
         probs = booster.predict(dtest)            # shape (n_samples, n_classes)
         preds_int = np.argmax(probs, axis=1)
+
+        self._y_test = y_test_int
+        self._preds = preds_int
+
+        cm = confusion_matrix(y_test_int, preds_int)
+        self._model_stats['confusion-matrix'] = cm
 
         self._model_stats['Log-loss'] = log_loss(y_test_int, probs)
         self._model_stats['Accuracy'] = accuracy_score(y_test_int, preds_int)
@@ -241,7 +259,6 @@ class Model:
         return result
 
 
-
     def _predict_xgboost(self, data: pd.DataFrame) -> dict:
         dnew = xgb.DMatrix(data)
         probs = self._model.predict(dnew)[0]
@@ -255,6 +272,25 @@ class Model:
     def _predict_logistic_regression(self, data: pd.DataFrame) -> dict:
         df_novo = self._scaler.transform(df_novo)
 
+
+    def print_model_stats(self) -> None:
+        # 1) Imprime o relatório de classificação com precisão, recall, f1-score e suporte
+        print("Relatório de Classificação:")
+        print(classification_report(
+            self._y_test,        # Series com y_test
+            self._preds,         # array ou Series com preds
+            digits=4,            # casas decimais
+            target_names=self._model.classes_ if hasattr(self._model, 'classes_') else None
+        ))
+
+        # 2) Imprime a matriz de confusão
+        #print("Matriz de Confusão:")
+        #print(self._model_stats['confusion-matrix'])
+
+        # 3) Imprime Log-loss e Acurácia
+        print(f"  Log-loss : {self._model_stats['Log-loss']:.4f}")
+        print(f"  Acurácia : {self._model_stats['Accuracy']:.4f}")
+        pass
 
 
     def predict_custom(self, ) -> dict:

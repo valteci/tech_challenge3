@@ -1,0 +1,381 @@
+HomeTeam,AwayTeam,FTHG,FTAG,FTR
+Arsenal,Everton,2,1,H
+Birmingham,Tottenham,1,0,H
+Blackburn,Wolves,5,1,H
+Fulham,Middlesbrough,3,2,H
+Leicester,Southampton,2,2,D
+Man United,Bolton,4,0,H
+Portsmouth,Aston Villa,2,1,H
+Charlton,Man City,0,3,A
+Leeds,Newcastle,2,2,D
+Liverpool,Chelsea,1,2,A
+Bolton,Blackburn,2,2,D
+Chelsea,Leicester,2,1,H
+Everton,Fulham,3,1,H
+Man City,Portsmouth,1,1,D
+Newcastle,Man United,1,2,A
+Southampton,Birmingham,0,0,D
+Tottenham,Leeds,2,1,H
+Wolves,Charlton,0,4,A
+Aston Villa,Liverpool,0,0,D
+Middlesbrough,Arsenal,0,4,A
+Blackburn,Man City,2,3,A
+Charlton,Everton,2,2,D
+Leeds,Southampton,0,0,D
+Leicester,Middlesbrough,0,0,D
+Portsmouth,Bolton,4,0,H
+Arsenal,Aston Villa,2,0,H
+Liverpool,Tottenham,0,0,D
+Man United,Wolves,1,0,H
+Aston Villa,Leicester,3,1,H
+Bolton,Charlton,0,0,D
+Chelsea,Blackburn,2,2,D
+Everton,Liverpool,0,3,A
+Middlesbrough,Leeds,2,3,A
+Newcastle,Birmingham,0,1,A
+Tottenham,Fulham,0,3,A
+Wolves,Portsmouth,0,0,D
+Man City,Arsenal,1,2,A
+Southampton,Man United,1,0,H
+Arsenal,Portsmouth,1,1,D
+Blackburn,Liverpool,1,3,A
+Bolton,Middlesbrough,2,0,H
+Charlton,Man United,0,2,A
+Chelsea,Tottenham,4,2,H
+Everton,Newcastle,2,2,D
+Southampton,Wolves,2,0,H
+Birmingham,Fulham,2,2,D
+Man City,Aston Villa,4,1,H
+Leicester,Leeds,4,0,H
+Aston Villa,Charlton,2,1,H
+Fulham,Man City,2,2,D
+Leeds,Birmingham,0,2,A
+Liverpool,Leicester,2,1,H
+Newcastle,Bolton,0,0,D
+Portsmouth,Blackburn,1,2,A
+Tottenham,Southampton,1,3,A
+Wolves,Chelsea,0,5,A
+Man United,Arsenal,0,0,D
+Middlesbrough,Everton,1,0,H
+Arsenal,Newcastle,3,2,H
+Birmingham,Portsmouth,2,0,H
+Bolton,Wolves,1,1,D
+Chelsea,Aston Villa,1,0,H
+Leicester,Man United,1,4,A
+Southampton,Middlesbrough,0,1,A
+Blackburn,Fulham,0,2,A
+Charlton,Liverpool,3,2,H
+Everton,Leeds,4,0,H
+Man City,Tottenham,0,0,D
+Fulham,Leicester,2,0,H
+Leeds,Blackburn,2,1,H
+Liverpool,Arsenal,1,2,A
+Man United,Birmingham,3,0,H
+Newcastle,Southampton,1,0,H
+Portsmouth,Charlton,1,2,A
+Tottenham,Everton,3,0,H
+Wolves,Man City,1,0,H
+Aston Villa,Bolton,1,1,D
+Middlesbrough,Chelsea,1,2,A
+Birmingham,Chelsea,0,0,D
+Arsenal,Chelsea,2,1,H
+Fulham,Wolves,0,0,D
+Leeds,Man United,0,1,A
+Man City,Bolton,6,2,H
+Middlesbrough,Newcastle,0,1,A
+Portsmouth,Liverpool,1,0,H
+Birmingham,Aston Villa,0,0,D
+Everton,Southampton,0,0,D
+Leicester,Tottenham,1,2,A
+Blackburn,Charlton,0,1,A
+Fulham,Newcastle,2,3,A
+Aston Villa,Everton,0,0,D
+Bolton,Birmingham,0,1,A
+Chelsea,Man City,1,0,H
+Liverpool,Leeds,3,1,H
+Man United,Fulham,1,3,A
+Newcastle,Portsmouth,3,0,H
+Southampton,Blackburn,2,0,H
+Wolves,Leicester,4,3,H
+Charlton,Arsenal,1,1,D
+Tottenham,Middlesbrough,0,0,D
+Everton,Chelsea,0,1,A
+Leeds,Arsenal,1,4,A
+Man United,Portsmouth,3,0,H
+Middlesbrough,Wolves,2,0,H
+Newcastle,Aston Villa,1,1,D
+Southampton,Man City,0,2,A
+Tottenham,Bolton,0,1,A
+Fulham,Liverpool,1,2,A
+Leicester,Blackburn,2,0,H
+Birmingham,Charlton,1,2,A
+Arsenal,Tottenham,2,1,H
+Aston Villa,Middlesbrough,0,2,A
+Bolton,Southampton,0,0,D
+Charlton,Fulham,3,1,H
+Portsmouth,Leeds,6,1,H
+Wolves,Birmingham,1,1,D
+Chelsea,Newcastle,5,0,H
+Liverpool,Man United,1,2,A
+Man City,Leicester,0,3,A
+Blackburn,Everton,2,1,H
+Birmingham,Arsenal,0,3,A
+Everton,Wolves,2,0,H
+Leeds,Bolton,0,2,A
+Leicester,Charlton,1,1,D
+Man United,Blackburn,2,1,H
+Middlesbrough,Liverpool,0,0,D
+Newcastle,Man City,3,0,H
+Southampton,Chelsea,0,1,A
+Tottenham,Aston Villa,2,1,H
+Fulham,Portsmouth,2,0,H
+Aston Villa,Southampton,1,0,H
+Blackburn,Tottenham,1,0,H
+Bolton,Everton,2,0,H
+Charlton,Leeds,0,1,A
+Portsmouth,Leicester,0,2,A
+Wolves,Newcastle,1,1,D
+Arsenal,Fulham,0,0,D
+Chelsea,Man United,1,0,H
+Liverpool,Birmingham,3,1,H
+Man City,Middlesbrough,0,1,A
+Birmingham,Blackburn,0,4,A
+Fulham,Bolton,2,1,H
+Leeds,Chelsea,1,1,D
+Leicester,Arsenal,1,1,D
+Man United,Aston Villa,4,0,H
+Middlesbrough,Portsmouth,0,0,D
+Newcastle,Liverpool,1,1,D
+Tottenham,Wolves,5,2,H
+Everton,Man City,0,0,D
+Southampton,Charlton,3,2,H
+Chelsea,Bolton,1,2,A
+Leicester,Birmingham,0,2,A
+Liverpool,Southampton,1,2,A
+Man United,Man City,3,1,H
+Middlesbrough,Charlton,0,0,D
+Newcastle,Tottenham,4,0,H
+Portsmouth,Everton,1,2,A
+Arsenal,Blackburn,1,0,H
+Aston Villa,Wolves,3,2,H
+Leeds,Fulham,3,2,H
+Blackburn,Aston Villa,0,2,A
+Bolton,Arsenal,1,1,D
+Charlton,Newcastle,0,0,D
+Everton,Leicester,3,2,H
+Fulham,Chelsea,0,1,A
+Southampton,Portsmouth,3,0,H
+Tottenham,Man United,1,2,A
+Man City,Leeds,1,1,D
+Arsenal,Wolves,3,0,H
+Birmingham,Man City,2,1,H
+Blackburn,Middlesbrough,2,2,D
+Charlton,Chelsea,4,2,H
+Fulham,Southampton,2,0,H
+Leeds,Aston Villa,0,0,D
+Leicester,Newcastle,1,1,D
+Liverpool,Bolton,3,1,H
+Man United,Everton,3,2,H
+Portsmouth,Tottenham,2,0,H
+Aston Villa,Fulham,3,0,H
+Bolton,Leicester,2,2,D
+Chelsea,Portsmouth,3,0,H
+Everton,Birmingham,1,0,H
+Man City,Liverpool,2,2,D
+Middlesbrough,Man United,0,1,A
+Newcastle,Blackburn,0,1,A
+Tottenham,Charlton,0,1,A
+Wolves,Leeds,3,1,H
+Southampton,Arsenal,0,1,A
+Aston Villa,Portsmouth,2,1,H
+Bolton,Man United,1,2,A
+Chelsea,Liverpool,0,1,A
+Everton,Arsenal,1,1,D
+Man City,Charlton,1,1,D
+Middlesbrough,Fulham,2,1,H
+Newcastle,Leeds,1,0,H
+Southampton,Leicester,0,0,D
+Tottenham,Birmingham,4,1,H
+Wolves,Blackburn,2,2,D
+Arsenal,Middlesbrough,4,1,H
+Birmingham,Southampton,2,1,H
+Blackburn,Bolton,3,4,A
+Charlton,Wolves,2,0,H
+Fulham,Everton,2,1,H
+Leeds,Tottenham,0,1,A
+Liverpool,Aston Villa,1,0,H
+Portsmouth,Man City,4,2,H
+Leicester,Chelsea,0,4,A
+Man United,Newcastle,0,0,D
+Bolton,Portsmouth,1,0,H
+Everton,Charlton,0,1,A
+Man City,Blackburn,1,1,D
+Middlesbrough,Leicester,3,3,D
+Southampton,Leeds,2,1,H
+Tottenham,Liverpool,2,1,H
+Wolves,Man United,1,0,H
+Aston Villa,Arsenal,0,2,A
+Chelsea,Birmingham,0,0,D
+Newcastle,Fulham,3,1,H
+Wolves,Liverpool,1,1,D
+Birmingham,Newcastle,1,1,D
+Charlton,Bolton,1,2,A
+Fulham,Tottenham,2,1,H
+Leeds,Middlesbrough,0,3,A
+Leicester,Aston Villa,0,5,A
+Liverpool,Everton,0,0,D
+Man United,Southampton,3,2,H
+Portsmouth,Wolves,0,0,D
+Arsenal,Man City,2,1,H
+Blackburn,Chelsea,2,3,A
+Aston Villa,Leeds,2,0,H
+Bolton,Liverpool,2,2,D
+Everton,Man United,3,4,A
+Middlesbrough,Blackburn,0,1,A
+Newcastle,Leicester,3,1,H
+Southampton,Fulham,0,0,D
+Tottenham,Portsmouth,4,3,H
+Wolves,Arsenal,1,3,A
+Chelsea,Charlton,1,0,H
+Man City,Birmingham,0,0,D
+Arsenal,Southampton,2,0,H
+Leeds,Wolves,4,1,H
+Leicester,Bolton,1,1,D
+Birmingham,Everton,3,0,H
+Blackburn,Newcastle,1,1,D
+Charlton,Tottenham,2,4,A
+Fulham,Aston Villa,1,2,A
+Liverpool,Man City,2,1,H
+Man United,Middlesbrough,2,3,A
+Portsmouth,Chelsea,0,2,A
+Bolton,Man City,1,3,A
+Charlton,Blackburn,3,2,H
+Chelsea,Arsenal,1,2,A
+Man United,Leeds,1,1,D
+Newcastle,Middlesbrough,2,1,H
+Southampton,Everton,3,3,D
+Wolves,Fulham,2,1,H
+Aston Villa,Birmingham,2,2,D
+Tottenham,Leicester,4,4,D
+Arsenal,Charlton,2,1,H
+Blackburn,Southampton,1,1,D
+Everton,Aston Villa,2,0,H
+Fulham,Man United,1,1,D
+Leicester,Wolves,0,0,D
+Man City,Chelsea,0,1,A
+Leeds,Liverpool,2,2,D
+Portsmouth,Newcastle,1,1,D
+Birmingham,Middlesbrough,3,1,H
+Birmingham,Bolton,2,0,H
+Middlesbrough,Tottenham,1,0,H
+Birmingham,Leicester,0,1,A
+Blackburn,Arsenal,0,2,A
+Bolton,Chelsea,0,2,A
+Charlton,Middlesbrough,1,0,H
+Everton,Portsmouth,1,0,H
+Fulham,Leeds,2,0,H
+Man City,Man United,4,1,H
+Southampton,Liverpool,2,0,H
+Tottenham,Newcastle,1,0,H
+Wolves,Aston Villa,0,4,A
+Liverpool,Portsmouth,3,0,H
+Arsenal,Bolton,2,1,H
+Aston Villa,Blackburn,0,2,A
+Chelsea,Fulham,2,1,H
+Leicester,Everton,1,1,D
+Liverpool,Wolves,1,0,H
+Man United,Tottenham,3,0,H
+Middlesbrough,Birmingham,5,3,H
+Newcastle,Charlton,3,1,H
+Portsmouth,Southampton,1,0,H
+Leeds,Man City,2,1,H
+Birmingham,Leeds,4,1,H
+Blackburn,Portsmouth,1,2,A
+Charlton,Aston Villa,1,2,A
+Chelsea,Wolves,5,2,H
+Everton,Middlesbrough,1,1,D
+Man City,Fulham,0,0,D
+Southampton,Tottenham,1,0,H
+Arsenal,Man United,1,1,D
+Bolton,Newcastle,1,0,H
+Leicester,Liverpool,0,0,D
+Fulham,Birmingham,0,0,D
+Middlesbrough,Bolton,2,0,H
+Newcastle,Everton,4,2,H
+Tottenham,Chelsea,0,1,A
+Wolves,Southampton,1,4,A
+Aston Villa,Man City,1,1,D
+Liverpool,Blackburn,4,0,H
+Leeds,Leicester,3,2,H
+Arsenal,Liverpool,4,2,H
+Everton,Tottenham,3,1,H
+Birmingham,Man United,1,2,A
+Blackburn,Leeds,1,2,A
+Bolton,Aston Villa,2,2,D
+Charlton,Portsmouth,1,1,D
+Chelsea,Middlesbrough,0,0,D
+Leicester,Fulham,0,2,A
+Man City,Wolves,3,3,D
+Newcastle,Arsenal,0,0,D
+Aston Villa,Chelsea,3,2,H
+Fulham,Blackburn,3,4,A
+Liverpool,Charlton,0,1,A
+Middlesbrough,Southampton,3,1,H
+Portsmouth,Birmingham,3,1,H
+Tottenham,Man City,1,1,D
+Wolves,Bolton,1,2,A
+Leeds,Everton,1,1,D
+Man United,Leicester,1,0,H
+Arsenal,Leeds,5,0,H
+Blackburn,Leicester,1,0,H
+Bolton,Tottenham,2,0,H
+Charlton,Birmingham,1,1,D
+Chelsea,Everton,0,0,D
+Liverpool,Fulham,0,0,D
+Man City,Southampton,1,3,A
+Portsmouth,Man United,1,0,H
+Wolves,Middlesbrough,2,0,H
+Aston Villa,Newcastle,0,0,D
+Man United,Charlton,2,0,H
+Everton,Blackburn,0,1,A
+Fulham,Charlton,2,0,H
+Leicester,Man City,1,1,D
+Man United,Liverpool,0,1,A
+Middlesbrough,Aston Villa,1,2,A
+Southampton,Bolton,1,2,A
+Birmingham,Wolves,2,2,D
+Leeds,Portsmouth,1,2,A
+Newcastle,Chelsea,2,1,H
+Tottenham,Arsenal,2,2,D
+Arsenal,Birmingham,0,0,D
+Blackburn,Man United,1,0,H
+Charlton,Leicester,2,2,D
+Chelsea,Southampton,4,0,H
+Man City,Newcastle,1,0,H
+Portsmouth,Fulham,1,1,D
+Wolves,Everton,2,1,H
+Aston Villa,Tottenham,1,0,H
+Bolton,Leeds,4,1,H
+Liverpool,Middlesbrough,2,0,H
+Portsmouth,Arsenal,1,1,D
+Birmingham,Liverpool,0,3,A
+Everton,Bolton,1,2,A
+Leeds,Charlton,3,3,D
+Leicester,Portsmouth,3,1,H
+Man United,Chelsea,1,1,D
+Middlesbrough,Man City,2,1,H
+Southampton,Aston Villa,1,1,D
+Tottenham,Blackburn,1,0,H
+Fulham,Arsenal,0,1,A
+Newcastle,Wolves,1,1,D
+Southampton,Newcastle,3,3,D
+Arsenal,Leicester,2,1,H
+Aston Villa,Man United,0,2,A
+Blackburn,Birmingham,1,1,D
+Bolton,Fulham,0,2,A
+Charlton,Southampton,2,1,H
+Chelsea,Leeds,1,0,H
+Liverpool,Newcastle,1,1,D
+Man City,Everton,5,1,H
+Portsmouth,Middlesbrough,5,1,H
+Wolves,Tottenham,0,2,A
